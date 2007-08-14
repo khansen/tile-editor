@@ -96,11 +96,11 @@ public class TMUI extends JFrame {
     private TMPalettePane palettePane;
 
     // file choosers
-    private TMApprovedFileOpenChooser fileOpenChooser = new TMApprovedFileOpenChooser();
-    private TMApprovedFileSaveChooser fileSaveChooser = new TMApprovedFileSaveChooser();
-    private TMApprovedFileOpenChooser bitmapOpenChooser = new TMApprovedFileOpenChooser();
-    private TMApprovedFileSaveChooser bitmapSaveChooser = new TMApprovedFileSaveChooser();
-    private TMApprovedFileOpenChooser paletteOpenChooser = new TMApprovedFileOpenChooser();
+    private TMApprovedFileOpenChooser fileOpenChooser = null;
+    private TMApprovedFileSaveChooser fileSaveChooser = null;
+    private TMApprovedFileOpenChooser bitmapOpenChooser = null;
+    private TMApprovedFileSaveChooser bitmapSaveChooser = null;
+    private TMApprovedFileOpenChooser paletteOpenChooser = null;
 
     private TMBitmapFilters bmf = new TMBitmapFilters();
     private TMFileFilter allFilter = new AllFilter();
@@ -459,12 +459,6 @@ public class TMUI extends JFrame {
         UIManager.put("OptionPane.cancelButtonText", xlate("Cancel"));
         UIManager.put("OptionPane.okButtonText", xlate("OK"));
 
-        fileOpenChooser.setDialogTitle(xlate("Open_File_Dialog_Title"));
-        fileSaveChooser.setDialogTitle(xlate("Save_As_Dialog_Title"));
-        bitmapOpenChooser.setDialogTitle(xlate("Paste_From_Dialog_Title"));
-        bitmapSaveChooser.setDialogTitle(xlate("Copy_To_Dialog_Title"));
-        paletteOpenChooser.setDialogTitle(xlate("Open_Palette_Dialog_Title"));
-
 ///////// Read specs
         try {
             TMSpecReader.readSpecsFromFile(new File("tmspec.xml"));
@@ -572,31 +566,6 @@ public class TMUI extends JFrame {
 
         initTileCodecUIStuff();
         buildColorCodecsMenu();
-        initPaletteOpenChooser();
-
-        // Set up file save chooser.
-        fileSaveChooser.setAcceptAllFileFilterUsed(false);
-        fileSaveChooser.addChoosableFileFilter(allFilter);
-        fileSaveChooser.setFileFilter(allFilter);
-
-        // Set up bitmap open chooser.
-        bitmapOpenChooser.setAcceptAllFileFilterUsed(false);
-        bitmapOpenChooser.addChoosableFileFilter(bmf.supported);
-        bitmapOpenChooser.addChoosableFileFilter(bmf.gif);
-        bitmapOpenChooser.addChoosableFileFilter(bmf.jpeg);
-        bitmapOpenChooser.addChoosableFileFilter(bmf.png);
-        bitmapOpenChooser.addChoosableFileFilter(bmf.bmp);
-        bitmapOpenChooser.addChoosableFileFilter(bmf.pcx);
-        bitmapOpenChooser.setFileFilter(bmf.supported);
-
-        // Set up bitmap save chooser.
-        bitmapSaveChooser.setAcceptAllFileFilterUsed(false);
-        bitmapSaveChooser.addChoosableFileFilter(bmf.gif);
-        bitmapSaveChooser.addChoosableFileFilter(bmf.jpeg);
-        bitmapSaveChooser.addChoosableFileFilter(bmf.png);
-        bitmapSaveChooser.addChoosableFileFilter(bmf.bmp);
-        bitmapSaveChooser.addChoosableFileFilter(bmf.pcx);
-        bitmapSaveChooser.setFileFilter(bmf.png);
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -2026,6 +1995,7 @@ public class TMUI extends JFrame {
 **/
 
     public void doOpenCommand() {
+        initFileOpenChooser();
         // set to directory of selected file, if there is one
         TMView view = getSelectedView();
         if (view != null) {
@@ -2115,7 +2085,7 @@ public class TMUI extends JFrame {
 **/
 
     public void saveResources(FileImage img) {
-		// TODO: should only save if # bookmarks | # of palettes > 0?
+        // TODO: should only save if # bookmarks | # of palettes > 0?
         File resourceFile = TMFileResources.getResourceFileFor(img.getFile());
         try {
             FileWriter fw = new FileWriter(resourceFile);
@@ -2268,6 +2238,7 @@ public class TMUI extends JFrame {
 **/
 
     public void doSaveAsCommand() {
+        initFileSaveChooser();
         TMView view = getSelectedView();
         if (view != null) {
             fileSaveChooser.setCurrentDirectory(view.getFileImage().getFile().getParentFile());
@@ -2485,6 +2456,7 @@ public class TMUI extends JFrame {
 **/
 
     public void doCopyToCommand() {
+        initBitmapSaveChooser();
         TMView view = getSelectedView();
         if (view != null) {
             int retVal = bitmapSaveChooser.showSaveDialog(this);
@@ -2509,6 +2481,7 @@ public class TMUI extends JFrame {
 **/
 
     public void doPasteFromCommand() {
+        initBitmapOpenChooser();
         TMView view = getSelectedView();
         if (view != null) {
             int retVal = bitmapOpenChooser.showOpenDialog(this);
@@ -3028,6 +3001,7 @@ public class TMUI extends JFrame {
 **/
 
     public void doReopenCommand(File recentFile) {
+        initFileOpenChooser();
         if (recentFile.exists() && recentFile.canRead()) {
             fileOpenChooser.setFileFilter(getTileCodecFilterForFile(recentFile));
             openFile(recentFile);
@@ -3371,6 +3345,7 @@ public class TMUI extends JFrame {
 **/
 
     public void doImportExternalPaletteCommand() {
+        initPaletteOpenChooser();
         TMView view = getSelectedView();
         if (view != null) {
             // have the user select a file
@@ -3927,7 +3902,6 @@ public class TMUI extends JFrame {
 
     private void initTileCodecUIStuff() {
         buildTileCodecsMenu();
-        initFileOpenChooser();
     }
 
 /**
@@ -4016,6 +3990,10 @@ public class TMUI extends JFrame {
 **/
 
     private void initFileOpenChooser() {
+        if (fileOpenChooser != null)
+            return;
+        fileOpenChooser = new TMApprovedFileOpenChooser();
+        fileOpenChooser.setDialogTitle(xlate("Open_File_Dialog_Title"));
         fileOpenChooser.setAcceptAllFileFilterUsed(false);
         fileOpenChooser.resetChoosableFileFilters();
         // TODO: Sort alphabetically by description...
@@ -4034,11 +4012,72 @@ public class TMUI extends JFrame {
 
 /**
 *
+* Sets up the file save chooser.
+*
+**/
+
+    private void initFileSaveChooser() {
+        if (fileSaveChooser != null)
+            return;
+        fileSaveChooser = new TMApprovedFileSaveChooser();
+        fileSaveChooser.setDialogTitle(xlate("Save_As_Dialog_Title"));
+        fileSaveChooser.setAcceptAllFileFilterUsed(false);
+        fileSaveChooser.addChoosableFileFilter(allFilter);
+        fileSaveChooser.setFileFilter(allFilter);
+    }
+
+/**
+*
+* Sets up the bitmap open chooser.
+*
+**/
+
+    private void initBitmapOpenChooser() {
+        if (bitmapOpenChooser != null)
+            return;
+        bitmapOpenChooser = new TMApprovedFileOpenChooser();
+        bitmapOpenChooser.setDialogTitle(xlate("Paste_From_Dialog_Title"));
+        bitmapOpenChooser.setAcceptAllFileFilterUsed(false);
+        bitmapOpenChooser.addChoosableFileFilter(bmf.supported);
+        bitmapOpenChooser.addChoosableFileFilter(bmf.gif);
+        bitmapOpenChooser.addChoosableFileFilter(bmf.jpeg);
+        bitmapOpenChooser.addChoosableFileFilter(bmf.png);
+        bitmapOpenChooser.addChoosableFileFilter(bmf.bmp);
+        bitmapOpenChooser.addChoosableFileFilter(bmf.pcx);
+        bitmapOpenChooser.setFileFilter(bmf.supported);
+    }
+
+/**
+*
+* Sets up the bitmap save chooser.
+*
+**/
+
+    private void initBitmapSaveChooser() {
+        if (bitmapSaveChooser != null)
+            return;
+        bitmapSaveChooser = new TMApprovedFileSaveChooser();
+        bitmapSaveChooser.setDialogTitle(xlate("Copy_To_Dialog_Title"));
+        bitmapSaveChooser.setAcceptAllFileFilterUsed(false);
+        bitmapSaveChooser.addChoosableFileFilter(bmf.gif);
+        bitmapSaveChooser.addChoosableFileFilter(bmf.jpeg);
+        bitmapSaveChooser.addChoosableFileFilter(bmf.png);
+        bitmapSaveChooser.addChoosableFileFilter(bmf.bmp);
+        bitmapSaveChooser.addChoosableFileFilter(bmf.pcx);
+        bitmapSaveChooser.setFileFilter(bmf.png);
+    }
+
+/**
+*
 * Sets up the palette open chooser.
 *
 **/
 
     private void initPaletteOpenChooser() {
+        if (paletteOpenChooser != null)
+            return;
+        paletteOpenChooser = new TMApprovedFileOpenChooser();
+        paletteOpenChooser.setDialogTitle(xlate("Open_Palette_Dialog_Title"));
         paletteOpenChooser.setAcceptAllFileFilterUsed(false);
         paletteOpenChooser.resetChoosableFileFilters();
         String extlist = "";
@@ -4583,6 +4622,7 @@ public class TMUI extends JFrame {
         }
 
         // figure out mode and codec based on file filter
+        initFileOpenChooser();
         FileFilter ff = fileOpenChooser.getFileFilter();
         if (!(ff instanceof TMTileCodecFileFilter)) {
             ff = getTileCodecFilterForFile(file);
