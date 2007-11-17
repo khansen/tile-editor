@@ -107,7 +107,7 @@ public class TMUI extends JFrame {
 
     // custom dialogs
     private TMGoToDialog goToDialog;
-    private TMNewFileDialog newFileDialog;
+    private TMNewFileDialog newFileDialog = null;
     private TMCustomCodecDialog customCodecDialog;
     private TMStretchDialog stretchDialog;
     private TMCanvasSizeDialog canvasSizeDialog;
@@ -506,7 +506,6 @@ public class TMUI extends JFrame {
 
         // create dialogs.
         goToDialog = new TMGoToDialog(this, xl);
-        newFileDialog = new TMNewFileDialog(this, xl);
 //        customCodecDialog = new TMCustomCodecDialog(this, "Custom Codec", true, xl);
         stretchDialog = new TMStretchDialog(this, xl);
         canvasSizeDialog = new TMCanvasSizeDialog(this, xl);
@@ -1973,16 +1972,54 @@ public class TMUI extends JFrame {
 
     public void doNewCommand() {
         // Show dialog for creating new file
-        //TMNewFileDialog newFileDialog = new TMNewFileDialog(this, xl);
+        if (newFileDialog == null)
+            newFileDialog = new TMNewFileDialog(this, xl);
+        newFileDialog.setAvailableCodecs(tilecodecs);
+        if (copiedSelection != null) {
+            newFileDialog.setDefaultColumnAndRowCount(
+                copiedSelection.getCols(),
+                copiedSelection.getRows());
+            newFileDialog.setDefaultCodec(copiedSelection.getCodec());
+        }
         int retVal = newFileDialog.showDialog();
         if (retVal == JOptionPane.OK_OPTION) {
+            int size = -1;
+            TileCodec codec = null;
+            int mode = -1;
+            int rows = 16;
+            int columns = 16;
+            TMPalette pal = null;
+            switch (newFileDialog.getMode()) {
+	    case TMNewFileDialog.DIMENSIONS_MODE:
+                rows = newFileDialog.getRowCount();
+		columns = newFileDialog.getColumnCount();
+                codec = newFileDialog.getSelectedCodec();
+                size = rows * columns * codec.getTileSize();
+                if (copiedSelection != null) {
+                    mode = copiedSelection.getMode();
+                    pal = new TMPalette(copiedSelection.getPalette());
+                }
+		break;
+	    case TMNewFileDialog.FILESIZE_MODE:
+                size = newFileDialog.getFileSize();
+		break;
+            }
+	    if (codec == null)
+		codec = (TileCodec)tilecodecs.get(0);    // default
+	    if (mode == -1)
+		mode = TileCodec.MODE_1D;
+            if (pal == null) {
+                pal = new TMPalette("PAL000", TMPalette.defaultPalette, getColorCodecByID("CF01"),
+                                    ColorCodec.LITTLE_ENDIAN, true);
+            }
             // create fileimage
-            FileImage img = new FileImage(newFileDialog.getFileSize());
+            FileImage img = new FileImage(size);
             new TMFileResources(img, this);
             // create view for it
-            TileCodec tc = (TileCodec)tilecodecs.get(0);    // default
-            TMPalette pal = new TMPalette("PAL000", TMPalette.defaultPalette, getColorCodecByID("CF01"), ColorCodec.LITTLE_ENDIAN, true);
-            addViewToDesktop(createView(img, tc, pal, TileCodec.MODE_1D));
+	    TMView view = createView(img, codec, pal, mode);
+            view.setGridSize(Math.min(32, columns), Math.min(32, rows));
+            view.fitTilesInWindow();
+            addViewToDesktop(view);
         }
     }
 
