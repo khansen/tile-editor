@@ -1199,6 +1199,7 @@ public class TMUI extends JFrame {
 
     private void initMenuBar() {
         int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        boolean onMac = System.getProperty("os.name").equals("Mac OS X");
         // File menu
         fileMenu.setMnemonic(KeyEvent.VK_F);
         // New
@@ -1281,7 +1282,7 @@ public class TMUI extends JFrame {
         );
         fileMenu.add(saveAllMenuItem);
         //
-        if (!System.getProperty("os.name").equals("Mac OS X")) {
+        if (!onMac) {
             fileMenu.addSeparator();
             // Exit
             exitMenuItem.setMnemonic(KeyEvent.VK_X);
@@ -1356,7 +1357,8 @@ public class TMUI extends JFrame {
         editMenu.add(pasteMenuItem);
         // Clear
         clearMenuItem.setMnemonic(KeyEvent.VK_L);
-        clearMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+        clearMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+            onMac ? KeyEvent.VK_BACK_SPACE : KeyEvent.VK_DELETE, 0));
         clearMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
