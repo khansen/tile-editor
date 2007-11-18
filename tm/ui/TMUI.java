@@ -289,6 +289,7 @@ public class TMUI extends JFrame {
 
     public TMUI() {
         super("Tile Molester");
+
         setIconImage(new ImageIcon(cl.getResource("tm/icons/TMIcon.gif")).getImage());
 
         if (settingsFile.exists()) {
@@ -1197,11 +1198,12 @@ public class TMUI extends JFrame {
 **/
 
     private void initMenuBar() {
+        int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
         // File menu
         fileMenu.setMnemonic(KeyEvent.VK_F);
         // New
         newMenuItem.setMnemonic(KeyEvent.VK_N);
-        newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
+        newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, shortcutMask));
         newMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1212,7 +1214,7 @@ public class TMUI extends JFrame {
         fileMenu.add(newMenuItem);
         // Open
         openMenuItem.setMnemonic(KeyEvent.VK_O);
-        openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
+        openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, shortcutMask));
         openMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1226,6 +1228,7 @@ public class TMUI extends JFrame {
         fileMenu.add(reopenMenu);
         // Close
         closeMenuItem.setMnemonic(KeyEvent.VK_C);
+        closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, shortcutMask));
         closeMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1248,7 +1251,7 @@ public class TMUI extends JFrame {
         fileMenu.addSeparator();
         // Save
         saveMenuItem.setMnemonic(KeyEvent.VK_S);
-        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, shortcutMask));
         saveMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1278,23 +1281,25 @@ public class TMUI extends JFrame {
         );
         fileMenu.add(saveAllMenuItem);
         //
-        fileMenu.addSeparator();
-        // Exit
-        exitMenuItem.setMnemonic(KeyEvent.VK_X);
-        exitMenuItem.addActionListener(
-            new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    doExitCommand();
+        if (!System.getProperty("os.name").equals("Mac OS X")) {
+            fileMenu.addSeparator();
+            // Exit
+            exitMenuItem.setMnemonic(KeyEvent.VK_X);
+            exitMenuItem.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        doExitCommand();
+                    }
                 }
-            }
-        );
-        fileMenu.add(exitMenuItem);
+            );
+            fileMenu.add(exitMenuItem);
+        }
         menuBar.add(fileMenu);
         // Edit menu
         editMenu.setMnemonic(KeyEvent.VK_E);
         // Undo
         undoMenuItem.setMnemonic(KeyEvent.VK_U);
-        undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Event.CTRL_MASK));
+        undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, shortcutMask));
         undoMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1305,7 +1310,7 @@ public class TMUI extends JFrame {
         editMenu.add(undoMenuItem);
         // Redo
         redoMenuItem.setMnemonic(KeyEvent.VK_R);
-        redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, Event.CTRL_MASK));
+        redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, shortcutMask));
         redoMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1318,7 +1323,7 @@ public class TMUI extends JFrame {
         editMenu.addSeparator();
         // Cut
         cutMenuItem.setMnemonic(KeyEvent.VK_T);
-        cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK));
+        cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, shortcutMask));
         cutMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1329,7 +1334,7 @@ public class TMUI extends JFrame {
         editMenu.add(cutMenuItem);
         // Copy
         copyMenuItem.setMnemonic(KeyEvent.VK_C);
-        copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK));
+        copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, shortcutMask));
         copyMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1340,7 +1345,7 @@ public class TMUI extends JFrame {
         editMenu.add(copyMenuItem);
         // Paste
         pasteMenuItem.setMnemonic(KeyEvent.VK_P);
-        pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, Event.CTRL_MASK));
+        pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, shortcutMask));
         pasteMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1364,7 +1369,7 @@ public class TMUI extends JFrame {
         editMenu.addSeparator();
         // Select All
         selectAllMenuItem.setMnemonic(KeyEvent.VK_S);
-        selectAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, Event.CTRL_MASK));
+        selectAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, shortcutMask));
         selectAllMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1609,7 +1614,7 @@ public class TMUI extends JFrame {
         imageMenu.setMnemonic(KeyEvent.VK_I);
         // Mirror
         mirrorMenuItem.setMnemonic(KeyEvent.VK_M);
-        mirrorMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, Event.CTRL_MASK));
+        mirrorMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, shortcutMask));
         mirrorMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1620,7 +1625,7 @@ public class TMUI extends JFrame {
         imageMenu.add(mirrorMenuItem);
         // Flip
         flipMenuItem.setMnemonic(KeyEvent.VK_F);
-        flipMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, Event.CTRL_MASK));
+        flipMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, shortcutMask));
         flipMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1724,7 +1729,7 @@ public class TMUI extends JFrame {
         navigateMenu.setMnemonic(KeyEvent.VK_N);
         // Go To
         goToMenuItem.setMnemonic(KeyEvent.VK_G);
-        goToMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, Event.CTRL_MASK));
+        goToMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, shortcutMask));
         goToMenuItem.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
