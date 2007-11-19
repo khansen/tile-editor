@@ -303,9 +303,10 @@ public class TMSpecReader {
             String classname = fl.getAttribute("classname");
             Class c;
             try {
-                c = loader.loadClass(classname);
+                c = loader.loadClass("tm.filelistener." + classname);
             }
             catch (Exception e) {
+                System.out.println("Failed to load " + classname);
                 continue;
             }
             Object o;
@@ -313,6 +314,7 @@ public class TMSpecReader {
                 o = c.newInstance();
             }
             catch (Exception e) {
+                System.out.println("Failed to instantiate " + classname);
                 continue;
             }
             filelisteners.add((TMFileListener)o);
