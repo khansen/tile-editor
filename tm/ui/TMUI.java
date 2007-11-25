@@ -252,6 +252,7 @@ public class TMUI extends JFrame {
     // Window menu
     private JMenu windowMenu = new JMenu("Window");
     private JMenuItem newWindowMenuItem = new JMenuItem("New Window");
+    private JMenuItem sizeToContentsMenuItem = new JMenuItem("Size to Contents");
     private JMenuItem tileMenuItem = new JMenuItem("Tile");
     private JMenuItem cascadeMenuItem = new JMenuItem("Cascade");
     private JMenuItem arrangeIconsMenuItem = new JMenuItem("Arrange Icons");
@@ -446,6 +447,7 @@ public class TMUI extends JFrame {
         // Window menu
         windowMenu.setText(xlate("Window"));
         newWindowMenuItem.setText(xlate("New_Window"));
+        //        sizeToContentsMenuItem.setText("Size to Contents"); // i18n
         tileMenuItem.setText(xlate("Tile"));
         cascadeMenuItem.setText(xlate("Cascade"));
         arrangeIconsMenuItem.setText(xlate("Arrange_Icons"));
@@ -1899,6 +1901,17 @@ public class TMUI extends JFrame {
         windowMenu.add(newWindowMenuItem);
         //
         windowMenu.addSeparator();
+        // Size to Window
+        sizeToContentsMenuItem.addActionListener(
+            new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    doSizeToContentsCommand();
+                }
+            }
+        );
+        windowMenu.add(sizeToContentsMenuItem);
+        //
+        windowMenu.addSeparator();
         // Tile
         tileMenuItem.setMnemonic(KeyEvent.VK_T);
         tileMenuItem.addActionListener(
@@ -2025,7 +2038,7 @@ public class TMUI extends JFrame {
             // create view for it
 	    TMView view = createView(img, codec, pal, mode);
             view.setGridSize(Math.min(32, columns), Math.min(32, rows));
-            view.fitTilesInWindow();
+            view.sizeToContents();
             addViewToDesktop(view);
         }
     }
@@ -2834,6 +2847,11 @@ public class TMUI extends JFrame {
             newView.setGridSize(view.getCols(), view.getRows());
             addViewToDesktop(newView);
         }
+    }
+
+    public void doSizeToContentsCommand() {
+        TMView view = getSelectedView();
+        view.sizeToContents();
     }
 
 /**

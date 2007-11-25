@@ -796,7 +796,7 @@ public class TMView extends JInternalFrame implements ChangeListener {
         setPalIndex(bookmark.getPalIndex());
         setScale(getScale());
         ui.viewSelected(this);
-//        fitTilesInWindow();
+//        sizeToContents();
     }
 
 /**
@@ -847,7 +847,7 @@ public class TMView extends JInternalFrame implements ChangeListener {
 *
 **/
 
-    public void fitTilesInWindow() {
+    public void sizeToContents() {
         contentPane.setSize(slider.getWidth()+editorCanvas.getWidth(), editorCanvas.getHeight());
         Insets ins = getInsets();
         setSize(contentPane.getWidth()+ins.left+ins.right, 20+contentPane.getHeight()+ins.top+ins.bottom);
