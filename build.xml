@@ -6,7 +6,7 @@
     <target name="compile"
      description="compile the Java source code to class files">
         <mkdir dir="classes"/>
-        <javac srcdir="." destdir="classes">
+        <javac includeantruntime="false" srcdir="." destdir="classes">
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
