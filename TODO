@@ -1,0 +1,11 @@
+- undo/redo should be associated with FileImage, not with View
+- making changes in one view should immediately be reflected in all views associated with the file
+- abstracting how file data is retrieved and changed
+  - reading/writing files in chunks/pages
+
+TMBlob
+{
+    byte[] read(long pos, long count);
+    void write(long pos, byte[] data);
+    void save(File file);
+}
