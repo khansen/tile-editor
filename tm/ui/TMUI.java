@@ -33,6 +33,7 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.net.URISyntaxException;
 import javax.swing.border.*;
 import javax.swing.filechooser.FileFilter;
 import java.util.Locale;
@@ -2664,7 +2665,8 @@ public class TMUI extends JFrame {
             BrowserControl.displayURL("file://"+localizedHelpFile.getAbsolutePath());
         }
         else {
-            BrowserControl.displayURL("file://docs/help.htm");
+            File standardHelpFile = new File("docs/help.htm");
+            BrowserControl.displayURL("file://"+standardHelpFile.getAbsolutePath());
         }
     }
 
