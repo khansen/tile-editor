@@ -4,7 +4,7 @@
 <table width="70%">
 <tr><td>
 <center><h1>Tile Manipulator</h1></center>
-<center>Version 0.15a (Second public release)</center>
+<center>Version 1.0 (Third public release)</center>
 <ul>
 <li><a href="#INSTALLATION">Installation Notes</a></li>
 <li><a href="#WHATSNEW">What's New</a></li>
@@ -25,10 +25,6 @@ This program requires the Java Runtime Environment (JRE) version 1.4.0 or later
 (1.4.2 is the one being used during development),
 which can be downloaded from <a href="http://java.sun.com">java.sun.com</a>.
 <br><p>
-Copy the Tile Manipulator ZIP file to a fresh directory. Unzip it (make sure to
-preserve the directory substructure). Now you can run Tile Manipulator by
-(for example) double-clicking on <b>tm.jar</b>.
-<br><p>
 Some people have had problems running Tile Manipulator because JAR files
 aren't associated with the Java runtime environment on their machines; typically
 it is associated with compression programs instead. (It seems this applies mostly (only?)
@@ -40,6 +36,13 @@ directory. Double-clicking on that file should then do the trick.<hr>
 <br><p>
 <a name="#WHATSNEW">
 <h2>What's New</h2>
+v1.0:
+<ul>
+<li>Modernized the app to work better with newer Java versions.</li>
+<li>Modernized the package.sh script. Added icons for Mac.</li>
+<li>Removed splash screen.</li>
+<li>Fixed exception when closing a view.</li>
+</ul>
 v0.15a:
 <br><p>
 <ul>
@@ -657,9 +660,7 @@ and translate the text within to the proper language.
 <a name="#KNOWNISSUES">
 <h2>Known Issues</h2>
 These are some of the current problems and shortcomings that will (hopefully) be
-addressed in the future. Complaints about these issues will generally
-be ignored (although the people who will be complaining probably haven't bothered
-reading this far...).
+addressed in the future.
 <br><p>
 <ul>
 <li>Out of memory error when loading really large files. Nothing much I can do with
@@ -689,14 +690,13 @@ a zoomed canvas) is a bit jerky, to put it mildly.</li>
 <li>In order to change languages after the first time you've run the program,
 you have to delete the file <font face="Courier">settings.xml</font> and
 restart Tile Manipulator.</li>
-<li>Lots of other tiny things that serve to darken my day. Oh, you know what they are.
 </ul>
 <br><p>
 <hr>
 <br><p>
 <a name="#FEEDBACK">
 <h2>Feedback and Contributions</h2>
-Got bugs? <a href="mailto:kenth@stud.ntnu.no">Try me</a>.
+Got bugs? Report them <a href="https://github.com/khansen/tile-editor/issues">here</a>.
 <br><p>
 If you make a complete translation for a language which isn't currently supported
 by Tile Manipulator, you may send it my way and it will be posted on the website and
@@ -713,9 +713,6 @@ I am also interested in collections of bookmarks and palettes (resource files)
 for console binaries. The plan is to build a large database of such resources,
 so that anyone who wants to edit a particular file can look up the database
 first to see what information has already been documented about it.
-<br><p>
-Check out the <a href="http://www.stud.ntnu.no/~kenth/tm/">Tile Manipulator website</a> for
-the latest news and developments.
 </td></tr>
 </table>
 <br><p>

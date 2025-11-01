@@ -1,3 +1,7 @@
+# Tile Manipulator
+
+See [help](docs/help.htm).
+
 ## Install dependencies
 
 ### Mac
@@ -19,6 +23,8 @@ ant run
 ```
 
 ## Package
+
+### Mac
 
 ```
 ./package.sh
