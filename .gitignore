@@ -4,3 +4,6 @@ resources
 settings.xml
 dist/
 out/
+/TileManipulator.iconset/
+/*.icns
+.DS_Store

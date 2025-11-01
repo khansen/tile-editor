@@ -31,6 +31,7 @@
             <fileset dir="${build.dir}" includes="**/*.class"/>
             <fileset dir="${src.dir}">
                 <include name="**/*.gif"/>
+                <include name="**/*.png"/>
                 <include name="**/*.properties"/>
                 <include name="**/*.dtd"/>
             </fileset>
@@ -43,6 +44,14 @@
     <target name="build" depends="clean,jar" description="clean and build everything"/>
 
     <target name="run" depends="jar" description="run the application">
-        <java jar="${dist.dir}/tm.jar" fork="true"/>
+        <java jar="${dist.dir}/tm.jar" fork="true">
+            <!-- Mac dock name and menu properties -->
+            <jvmarg value="-Xdock:name=Tile Manipulator"/>
+            <jvmarg value="-Dapple.awt.application.name=Tile Manipulator"/>
+            <jvmarg value="-Dapple.laf.useScreenMenuBar=true"/>
+            <jvmarg value="-Dcom.apple.mrj.application.apple.menu.about.name=Tile Manipulator"/>
+            <!-- Mac dock icon -->
+            <jvmarg value="-Xdock:icon=resources/tile-icon-512.png"/>
+        </java>
     </target>
 </project>
