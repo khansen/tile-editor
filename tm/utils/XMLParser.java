@@ -65,8 +65,11 @@ public class XMLParser {
 
             builder.setErrorHandler(
                 new org.xml.sax.ErrorHandler() {
+                    @Override
                     public void fatalError(SAXParseException exception) throws SAXException {}
+                    @Override
                     public void error(SAXParseException e) throws SAXParseException { throw e; }
+                    @Override
                     public void warning(SAXParseException err) throws SAXParseException {
                         System.out.println("** Warning"
                             + ", line " + err.getLineNumber()

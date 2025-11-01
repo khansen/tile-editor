@@ -462,7 +462,7 @@ public class TMUI extends JFrame {
         UIManager.put("OptionPane.okButtonText", xlate("OK"));
 
 ///////// Read specs
-       InputStream specStream = null;
+        InputStream specStream = null;
         try {
             specStream = getClass().getClassLoader().getResourceAsStream("tmspec.xml");
             if (specStream != null) {
@@ -507,6 +507,13 @@ public class TMUI extends JFrame {
                 "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(0);
+        }
+        finally {
+            if (specStream != null) {
+                try {
+                    specStream.close();
+                } catch (IOException e) { }
+            }
         }
 
         colorcodecs = TMSpecReader.getColorCodecs();
