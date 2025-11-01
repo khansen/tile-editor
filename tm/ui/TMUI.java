@@ -462,8 +462,20 @@ public class TMUI extends JFrame {
         UIManager.put("OptionPane.okButtonText", xlate("OK"));
 
 ///////// Read specs
+       InputStream specStream = null;
         try {
-            TMSpecReader.readSpecsFromFile(new File("tmspec.xml"));
+            specStream = getClass().getClassLoader().getResourceAsStream("tmspec.xml");
+            if (specStream != null) {
+                TMSpecReader.readSpecsFromStream(specStream);
+            } else {
+                // Fallback: try from local disk
+                File specFile = new File("tmspec.xml");
+                if (specFile.exists()) {
+                    TMSpecReader.readSpecsFromFile(specFile);
+                } else {
+                    throw new FileNotFoundException("tmspec.xml not found in JAR or local disk.");
+                }
+            }
         }
         catch (SAXParseException e) {
             JOptionPane.showMessageDialog(this,

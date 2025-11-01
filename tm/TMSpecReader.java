@@ -31,6 +31,8 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -58,24 +60,25 @@ public class TMSpecReader {
 
     public static void readSpecsFromFile(File file)
     throws SAXException, ParserConfigurationException, IOException {
+        Document doc = XMLParser.parse(file);
+        if (doc == null) return;
+        processDocument(doc);
+    }
+
+    public static void readSpecsFromStream(InputStream in)
+    throws SAXException, ParserConfigurationException, IOException {
+        Document doc = XMLParser.parse(in);
+        if (doc == null) return;
+        processDocument(doc);
+    }
+
+    private static void processDocument(Document doc)
+    throws SAXException, ParserConfigurationException, IOException {
         colorcodecs = new Vector<ColorCodec>();
         tilecodecs = new Vector<TileCodec>();
         filefilters = new Vector<TMTileCodecFileFilter>();
         palettefilters = new Vector<TMPaletteFileFilter>();
         filelisteners = new Vector<TMFileListener>();
-        Document doc = null;
-        try {
-            doc = XMLParser.parse(file);
-        } catch (SAXException e) {
-            throw e;
-        }
-        catch (ParserConfigurationException e) {
-            throw e;
-        }
-        catch (IOException e) {
-            throw e;
-        }
-        if (doc == null) return;
 
         tmspec = doc.getDocumentElement();   // root element (<tmspec> tag)
 
