@@ -34,6 +34,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
 import javax.swing.border.*;
 import javax.swing.filechooser.FileFilter;
 import java.util.Locale;
@@ -43,7 +44,7 @@ import java.util.StringTokenizer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import java.io.IOException;
+
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -4782,38 +4783,90 @@ public class TMUI extends JFrame {
 
     public void selectLanguage() {
         // figure out available translations
-        File dir = new File("./languages");
-        File[] files = dir.listFiles(new PropertiesFilter());
-        if ((files != null) && (files.length > 0)) {
-            Locale[] locales = new Locale[files.length];
-            String[] displayNames = new String[locales.length];
-            int defaultIndex=0;
-            for (int i=0; i<files.length; i++) {
-                String name = files[i].getName();
-                String language = name.substring(name.indexOf('_')+1, name.lastIndexOf('_'));
-                String country = name.substring(name.lastIndexOf('_')+1, name.lastIndexOf('.'));
-                locales[i] = new Locale(language, country);
-                displayNames[i] = locales[i].getDisplayName();
-                if (language.equals("en")) defaultIndex=i;
-            }
+        ClassLoader cl = getClass().getClassLoader();
+        String path = "languages";
+        java.util.List<String> fileNames = new java.util.ArrayList<String>();
 
-            // ask user to select language
-            String selectedName = (String)JOptionPane.showInputDialog(this,
+        try {
+            java.net.URL url = cl.getResource(path);
+            if (url != null && "file".equals(url.getProtocol())) {
+                // running from classes on disk
+                File dir = new File(url.toURI());
+                File[] files = dir.listFiles(new PropertiesFilter());
+                if (files != null) {
+                    for (File f : files) fileNames.add(f.getName());
+                }
+            }
+            else if (url != null && "jar".equals(url.getProtocol())) {
+                // running from a jar — list entries in the jar
+                java.net.JarURLConnection conn = (java.net.JarURLConnection) url.openConnection();
+                java.util.jar.JarFile jar = conn.getJarFile();
+                java.util.Enumeration<java.util.jar.JarEntry> entries = jar.entries();
+                while (entries.hasMoreElements()) {
+                    java.util.jar.JarEntry e = entries.nextElement();
+                    String name = e.getName();
+                    if (name.startsWith(path + "/") && !e.isDirectory() && name.toLowerCase().endsWith(".properties")) {
+                        fileNames.add(name.substring(name.lastIndexOf('/') + 1));
+                    }
+                }
+            }
+            else {
+                // fallback to relative resources directory (development)
+                File dir = new File("./languages");
+                File[] files = dir.listFiles(new PropertiesFilter());
+                if (files != null) {
+                    for (File f : files) fileNames.add(f.getName());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Build compact lists of valid locales/display names to avoid nulls
+        java.util.List<Locale> localesList = new java.util.ArrayList<>();
+        java.util.List<String> displayNamesList = new java.util.ArrayList<>();
+        int defaultIndex = 0;
+
+        for (String name : fileNames) {
+            // expects language_xx_yy.properties
+            int firstUnd = name.indexOf('_');
+            int lastUnd = name.lastIndexOf('_');
+            int dot = name.lastIndexOf('.');
+            if (firstUnd == -1 || lastUnd == -1 || dot == -1 || lastUnd == firstUnd) {
+                // skip malformed entries
+                continue;
+            }
+            try {
+                String language = name.substring(firstUnd + 1, lastUnd);
+                String country = name.substring(lastUnd + 1, dot);
+                Locale loc = new Locale(language, country);
+                localesList.add(loc);
+                displayNamesList.add(loc.getDisplayName());
+                if ("en".equals(language) && defaultIndex == 0) {
+                    // prefer English as default if present
+                    defaultIndex = displayNamesList.size() - 1;
+                }
+            } catch (Exception ex) {
+                // ignore malformed / unexpected names
+            }
+        }
+
+        if (!displayNamesList.isEmpty()) {
+            String[] displayNames = displayNamesList.toArray(new String[0]);
+            if (defaultIndex < 0 || defaultIndex >= displayNames.length) defaultIndex = 0;
+            String selectedName = (String) JOptionPane.showInputDialog(this,
                 "Choose a locale:", "Tile Manipulator",
                 JOptionPane.INFORMATION_MESSAGE, null,
                 displayNames, displayNames[defaultIndex]);
             if (selectedName != null) {
-                // find selected one
-                for (int i=0; i<locales.length; i++) {
-                    if (selectedName.equals(locales[i].getDisplayName())) {
-                        // select this locale
-                        this.locale = locales[i];
+                for (int i = 0; i < displayNames.length; i++) {
+                    if (selectedName.equals(displayNames[i])) {
+                        this.locale = localesList.get(i);
                         break;
                     }
                 }
             }
-        }
-        else {
+        } else {
             JOptionPane.showMessageDialog(this,
                 xlate("No language files found.\nPlease check your installation."),
                 "Tile Manipulator",
