@@ -1,30 +1,48 @@
 <?xml version="1.0"?>
-<project name="TileMolester" default="compile">
+<project name="TileMolester" default="build">
+    <!-- Define project properties -->
+    <property name="src.dir" value="."/>
+    <property name="build.dir" value="classes"/>
+    <property name="dist.dir" value="dist"/>
+
     <target name="clean" description="remove intermediate files">
-        <delete dir="classes"/>
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete file="tm.jar"/>
     </target>
-    <target name="compile"
-     description="compile the Java source code to class files">
-        <mkdir dir="classes"/>
-        <javac includeantruntime="false" srcdir="." destdir="classes">
+
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <target name="compile" depends="init" description="compile the Java source code to class files">
+        <javac includeantruntime="false"
+               srcdir="${src.dir}"
+               destdir="${build.dir}"
+               debug="true"
+               encoding="UTF-8">
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
-    <target name="jar" depends="compile"
-     description="create a Jar file for the application">
-        <jar destfile="tm.jar">
-            <fileset dir="classes" includes="**/*.class"/>
-            <fileset dir="." includes="**/*.gif"/>
-            <fileset dir="." includes="**/*.properties"/>
-            <fileset dir="." includes="**/*.dtd"/>
+
+    <target name="jar" depends="compile" description="create a Jar file for the application">
+        <jar destfile="${dist.dir}/tm.jar">
+            <fileset dir="${build.dir}" includes="**/*.class"/>
+            <fileset dir="${src.dir}">
+                <include name="**/*.gif"/>
+                <include name="**/*.properties"/>
+                <include name="**/*.dtd"/>
+            </fileset>
             <manifest>
                 <attribute name="Main-Class" value="TileMolester"/>
             </manifest>
         </jar>
     </target>
-    <target name="run" depends="jar">
-        <java classname="TileMolester"
-              classpath="tm.jar"
-              />
+
+    <target name="build" depends="clean,jar" description="clean and build everything"/>
+
+    <target name="run" depends="jar" description="run the application">
+        <java jar="${dist.dir}/tm.jar" fork="true"/>
     </target>
 </project>

@@ -2,4 +2,5 @@ bundles
 classes
 resources
 settings.xml
-
+dist/
+out/
