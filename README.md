@@ -1,5 +1,7 @@
 # Tile Manipulator
 
+Console graphics editor written in Java.
+
 See [help](docs/help.htm).
 
 ## Install dependencies
