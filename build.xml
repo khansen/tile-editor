@@ -44,15 +44,30 @@
 
     <target name="build" depends="clean,jar" description="clean and build everything"/>
 
+    <!-- Detect Mac OS -->
+    <condition property="is.mac">
+        <os family="mac"/>
+    </condition>
+
+    <!-- Default: no extra JVM args -->
+    <property name="run.jvmargs" value=""/>
+
+    <!-- On mac, override with mac-specific args -->
+    <property name="mac.jvmargs" value='
+        "-Xdock:name=Tile Manipulator"
+        "-Dapple.awt.application.name=Tile Manipulator"
+        -Dapple.laf.useScreenMenuBar=true
+        "-Dcom.apple.mrj.application.apple.menu.about.name=Tile Manipulator"
+        "-Xdock:icon=resources/tile-icon-512.png"
+    '/>
+
+    <condition property="run.jvmargs" value="${mac.jvmargs}">
+        <equals arg1="${is.mac}" arg2="true"/>
+    </condition>
+
     <target name="run" depends="jar" description="run the application">
         <java jar="${dist.dir}/tm.jar" fork="true">
-            <!-- Mac dock name and menu properties -->
-            <jvmarg value="-Xdock:name=Tile Manipulator"/>
-            <jvmarg value="-Dapple.awt.application.name=Tile Manipulator"/>
-            <jvmarg value="-Dapple.laf.useScreenMenuBar=true"/>
-            <jvmarg value="-Dcom.apple.mrj.application.apple.menu.about.name=Tile Manipulator"/>
-            <!-- Mac dock icon -->
-            <jvmarg value="-Xdock:icon=resources/tile-icon-512.png"/>
+            <jvmarg line="${run.jvmargs}"/>
         </java>
     </target>
 </project>
