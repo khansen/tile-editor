@@ -886,13 +886,34 @@ public class TMView extends JInternalFrame implements ChangeListener {
         removeComponentListener(getComponentListeners()[0]);
 //        removeMouseWheelListener(getMouseWheelListeners()[0]);
         removeAll();
+
         fileImage = null;
-        editorCanvas.killViewRef();
-        editorCanvas = null;
-        setDesktopIcon(null);
+        if (editorCanvas != null) {
+            editorCanvas.killViewRef();
+            editorCanvas = null;
+        }
+
+        JDesktopIcon desktopIcon = getDesktopIcon();
+        if (desktopIcon != null) {
+            // safe to manipulate or remove the icon if needed
+            Container parent = desktopIcon.getParent();
+            if (parent != null) {
+                try {
+                    parent.remove(desktopIcon);
+                } catch (Exception ignore) {
+                    // defensive: ignore any removal errors
+                }
+            }
+        }
+
         setFrameIcon(null);
-        setUI(null);
-        super.dispose();
+        setContentPane(new JPanel());
+
+        try {
+            super.dispose();
+        } catch (Exception ignore) {
+            // Ignore any disposal errors from AquaLAF
+        }
     }
 
 /**

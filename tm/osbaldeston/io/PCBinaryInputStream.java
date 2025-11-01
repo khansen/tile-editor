@@ -11,7 +11,7 @@ package tm.osbaldeston.io;
 import java.io.*;
 import java.net.URL;
 
-public class PCBinaryInputStream {
+public class PCBinaryInputStream implements Closeable {
 
     DataInputStream file;
 
@@ -52,17 +52,11 @@ public class PCBinaryInputStream {
         file.skip(nbytes);
     }
 
-    public void close() throws IOException
-    {
-        file.close();
-        file=null;
-    }
-
-    public void finalize() {
+    @Override
+    public void close() throws IOException {
         if (file != null) {
-            try {
-                close();
-            } catch (IOException e) {}
+            file.close();
+            file = null;
         }
     }
 }

@@ -75,7 +75,7 @@ public class TMUI extends JFrame {
 
     private int maxRecentFiles = 10;
     private Vector<File> recentFiles = new Vector<File>();
-    private Vector colorcodecs;
+    private Vector<ColorCodec> colorcodecs;
     private Vector<TileCodec> tilecodecs;
     private Vector filefilters;
     private Vector palettefilters;

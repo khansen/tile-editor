@@ -71,7 +71,7 @@ public class FileLoaderThread extends ProgressThread {
                 catch (Exception e) { }
                 bytesLeft = 0;
             }
-            yield();
+            Thread.yield();
         }
         try {
             bis.close();

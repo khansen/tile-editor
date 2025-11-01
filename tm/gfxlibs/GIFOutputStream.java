@@ -283,8 +283,8 @@ public class GIFOutputStream extends FilterOutputStream
             checked[j] = true;
             --needsChecking;
 
-            key = new Integer(color);
-            colorSet.put(key, new Integer(colorIndex));
+            key = Integer.valueOf(color);
+            colorSet.put(key, Integer.valueOf(colorIndex));
             if (++colorIndex > 256)
                break;
 
@@ -298,10 +298,10 @@ public class GIFOutputStream extends FilterOutputStream
       }
 
       if (colorIndex == 1) {
-         if (colorSet.get(new Integer(0)) == null)
-            colorSet.put(new Integer(0), new Integer(1));
+         if (colorSet.get(Integer.valueOf(0)) == null)
+            colorSet.put(Integer.valueOf(0), Integer.valueOf(1));
          else
-            colorSet.put(new Integer(0xFFFFFF), new Integer(1));
+            colorSet.put(Integer.valueOf(0xFFFFFF), Integer.valueOf(1));
       }
 
       return colorSet;
@@ -327,7 +327,7 @@ public class GIFOutputStream extends FilterOutputStream
       int      colorIndex;
 
       for (int j = 0; j < pixels.length; ++j) {
-         key = new Integer(pixels[j] & 0x00FFFFFF);
+         key = Integer.valueOf(pixels[j] & 0x00FFFFFF);
          colorIndex = ((Integer) colorSet.get(key)).intValue();
          bytePixels[j] = (byte) colorIndex;
       }

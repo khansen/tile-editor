@@ -44,8 +44,8 @@ public class TMNewFileDialog extends TMModalDialog {
     private SpinnerNumberModel rowsModel;
     private JSpinner rowsSpinner;
     private JLabel codecLabel;
-    private DefaultComboBoxModel codecModel = null;
-    private JComboBox codecCombo;
+    private DefaultComboBoxModel<TileCodec> codecModel = null;
+    private JComboBox<TileCodec> codecCombo;
 
     private TileCodec defaultCodec = null;
     private Vector<TileCodec> availableCodecs;
@@ -125,7 +125,7 @@ public class TMNewFileDialog extends TMModalDialog {
         rowsModel = new SpinnerNumberModel(16, 1, 256, 1);
         rowsSpinner = new JSpinner(rowsModel);
         codecLabel = new JLabel(xlate("Codec"));
-        codecCombo = new JComboBox();
+        codecCombo = new JComboBox<>();
 
         JPanel p = new JPanel();
         GridBagLayout gbl = new GridBagLayout();
@@ -171,7 +171,7 @@ public class TMNewFileDialog extends TMModalDialog {
 
     public int showDialog() {
         if ((codecModel == null) || codecsChanged) {
-	    codecModel = new DefaultComboBoxModel(availableCodecs);
+	    codecModel = new DefaultComboBoxModel<>(availableCodecs);
 	    codecCombo.setModel(codecModel);
             codecsChanged = false;
 	}

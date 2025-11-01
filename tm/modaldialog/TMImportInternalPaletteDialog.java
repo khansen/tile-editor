@@ -40,7 +40,7 @@ public class TMImportInternalPaletteDialog extends TMModalDialog {
     private JLabel sizeLabel;
     private JTextField sizeField;
     private JLabel formatLabel;
-    private JComboBox codecCombo;
+    private JComboBox<ColorCodec> codecCombo;
     private JRadioButton littleRadio;
     private JRadioButton bigRadio;
     private JCheckBox copyCheck;
@@ -67,7 +67,7 @@ public class TMImportInternalPaletteDialog extends TMModalDialog {
         sizeLabel = new JLabel(xlate("Size_Prompt"));
         sizeField = new JTextField();
         formatLabel = new JLabel(xlate("Format"));
-        codecCombo = new JComboBox();
+        codecCombo = new JComboBox<>();
         copyCheck = new JCheckBox(xlate("Copy"));
 
         offsetField.setColumns(8);
@@ -152,7 +152,7 @@ public class TMImportInternalPaletteDialog extends TMModalDialog {
 *
 **/
 
-    public void setCodecs(Vector codecs) {
+    public void setCodecs(Vector<ColorCodec> codecs) {
         codecCombo.removeAllItems();
         for (int i=0; i<codecs.size(); i++) {
             codecCombo.addItem(codecs.get(i));
