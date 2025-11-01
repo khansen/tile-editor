@@ -351,9 +351,6 @@ public class TMUI extends JFrame {
         Locale.setDefault(locale);
         JOptionPane.setDefaultLocale(locale);
 
-        // show splash screen
-        new TMSplashScreen(this);
-
 // create a translator
         try {
             xl = new Xlator("languages/language", locale);
