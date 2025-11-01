@@ -2,14 +2,14 @@
 *
 *    Copyright (C) 2003 Kent Hansen.
 *
-*    This file is part of Tile Molester.
+*    This file is part of Tile Manipulator.
 *
-*    Tile Molester is free software; you can redistribute it and/or modify
+*    Tile Manipulator is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
 *    the Free Software Foundation; either version 2 of the License, or
 *    (at your option) any later version.
 *
-*    Tile Molester is distributed in the hope that it will be useful,
+*    Tile Manipulator is distributed in the hope that it will be useful,
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *    GNU General Public License for more details.
@@ -44,8 +44,8 @@ public class TMNewFileDialog extends TMModalDialog {
     private SpinnerNumberModel rowsModel;
     private JSpinner rowsSpinner;
     private JLabel codecLabel;
-    private DefaultComboBoxModel codecModel = null;
-    private JComboBox codecCombo;
+    private DefaultComboBoxModel<TileCodec> codecModel = null;
+    private JComboBox<TileCodec> codecCombo;
 
     private TileCodec defaultCodec = null;
     private Vector<TileCodec> availableCodecs;
@@ -125,7 +125,7 @@ public class TMNewFileDialog extends TMModalDialog {
         rowsModel = new SpinnerNumberModel(16, 1, 256, 1);
         rowsSpinner = new JSpinner(rowsModel);
         codecLabel = new JLabel(xlate("Codec"));
-        codecCombo = new JComboBox();
+        codecCombo = new JComboBox<>();
 
         JPanel p = new JPanel();
         GridBagLayout gbl = new GridBagLayout();
@@ -171,7 +171,7 @@ public class TMNewFileDialog extends TMModalDialog {
 
     public int showDialog() {
         if ((codecModel == null) || codecsChanged) {
-	    codecModel = new DefaultComboBoxModel(availableCodecs);
+	    codecModel = new DefaultComboBoxModel<>(availableCodecs);
 	    codecCombo.setModel(codecModel);
             codecsChanged = false;
 	}

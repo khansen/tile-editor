@@ -2,14 +2,14 @@
 *
 *    Copyright (C) 2003 Kent Hansen.
 *
-*    This file is part of Tile Molester.
+*    This file is part of Tile Manipulator.
 *
-*    Tile Molester is free software; you can redistribute it and/or modify
+*    Tile Manipulator is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
 *    the Free Software Foundation; either version 2 of the License, or
 *    (at your option) any later version.
 *
-*    Tile Molester is distributed in the hope that it will be useful,
+*    Tile Manipulator is distributed in the hope that it will be useful,
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *    GNU General Public License for more details.
@@ -31,6 +31,8 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -58,24 +60,25 @@ public class TMSpecReader {
 
     public static void readSpecsFromFile(File file)
     throws SAXException, ParserConfigurationException, IOException {
+        Document doc = XMLParser.parse(file);
+        if (doc == null) return;
+        processDocument(doc);
+    }
+
+    public static void readSpecsFromStream(InputStream in)
+    throws SAXException, ParserConfigurationException, IOException {
+        Document doc = XMLParser.parse(in);
+        if (doc == null) return;
+        processDocument(doc);
+    }
+
+    private static void processDocument(Document doc)
+    throws SAXException, ParserConfigurationException, IOException {
         colorcodecs = new Vector<ColorCodec>();
         tilecodecs = new Vector<TileCodec>();
         filefilters = new Vector<TMTileCodecFileFilter>();
         palettefilters = new Vector<TMPaletteFileFilter>();
         filelisteners = new Vector<TMFileListener>();
-        Document doc = null;
-        try {
-            doc = XMLParser.parse(file);
-        } catch (SAXException e) {
-            throw e;
-        }
-        catch (ParserConfigurationException e) {
-            throw e;
-        }
-        catch (IOException e) {
-            throw e;
-        }
-        if (doc == null) return;
 
         tmspec = doc.getDocumentElement();   // root element (<tmspec> tag)
 

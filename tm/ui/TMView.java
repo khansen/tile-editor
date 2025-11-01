@@ -2,14 +2,14 @@
 *
 *    Copyright (C) 2003 Kent Hansen.
 *
-*    This file is part of Tile Molester.
+*    This file is part of Tile Manipulator.
 *
-*    Tile Molester is free software; you can redistribute it and/or modify
+*    Tile Manipulator is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
 *    the Free Software Foundation; either version 2 of the License, or
 *    (at your option) any later version.
 *
-*    Tile Molester is distributed in the hope that it will be useful,
+*    Tile Manipulator is distributed in the hope that it will be useful,
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *    GNU General Public License for more details.
@@ -886,13 +886,34 @@ public class TMView extends JInternalFrame implements ChangeListener {
         removeComponentListener(getComponentListeners()[0]);
 //        removeMouseWheelListener(getMouseWheelListeners()[0]);
         removeAll();
+
         fileImage = null;
-        editorCanvas.killViewRef();
-        editorCanvas = null;
-        setDesktopIcon(null);
+        if (editorCanvas != null) {
+            editorCanvas.killViewRef();
+            editorCanvas = null;
+        }
+
+        JDesktopIcon desktopIcon = getDesktopIcon();
+        if (desktopIcon != null) {
+            // safe to manipulate or remove the icon if needed
+            Container parent = desktopIcon.getParent();
+            if (parent != null) {
+                try {
+                    parent.remove(desktopIcon);
+                } catch (Exception ignore) {
+                    // defensive: ignore any removal errors
+                }
+            }
+        }
+
         setFrameIcon(null);
-        setUI(null);
-        super.dispose();
+        setContentPane(new JPanel());
+
+        try {
+            super.dispose();
+        } catch (Exception ignore) {
+            // Ignore any disposal errors from AquaLAF
+        }
     }
 
 /**

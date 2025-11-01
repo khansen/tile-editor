@@ -2,14 +2,14 @@
 *
 *    Copyright (C) 2003 Kent Hansen.
 *
-*    This file is part of Tile Molester.
+*    This file is part of Tile Manipulator.
 *
-*    Tile Molester is free software; you can redistribute it and/or modify
+*    Tile Manipulator is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
 *    the Free Software Foundation; either version 2 of the License, or
 *    (at your option) any later version.
 *
-*    Tile Molester is distributed in the hope that it will be useful,
+*    Tile Manipulator is distributed in the hope that it will be useful,
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *    GNU General Public License for more details.
@@ -34,6 +34,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
 import javax.swing.border.*;
 import javax.swing.filechooser.FileFilter;
 import java.util.Locale;
@@ -43,7 +44,7 @@ import java.util.StringTokenizer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import java.io.IOException;
+
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -75,7 +76,7 @@ public class TMUI extends JFrame {
 
     private int maxRecentFiles = 10;
     private Vector<File> recentFiles = new Vector<File>();
-    private Vector colorcodecs;
+    private Vector<ColorCodec> colorcodecs;
     private Vector<TileCodec> tilecodecs;
     private Vector filefilters;
     private Vector palettefilters;
@@ -261,7 +262,7 @@ public class TMUI extends JFrame {
     private JMenu helpMenu = new JMenu("Help");
     private JMenuItem helpTopicsMenuItem = new JMenuItem("Help Topics");
     private JMenuItem tipMenuItem = new JMenuItem("Tip of the Millennium...");
-    private JMenuItem aboutMenuItem = new JMenuItem("About Tile Molester...");
+    private JMenuItem aboutMenuItem = new JMenuItem("About Tile Manipulator...");
 
     // button groups
     private ButtonGroup toolButtonGroup = new ButtonGroup();
@@ -285,12 +286,12 @@ public class TMUI extends JFrame {
 
 /**
 *
-* Creates a Tile Molester UI.
+* Creates a Tile Manipulator UI.
 *
 **/
 
     public TMUI() {
-        super("Tile Molester");
+        super("Tile Manipulator");
 
         setIconImage(new ImageIcon(cl.getResource("tm/icons/TMIcon.gif")).getImage());
 
@@ -351,16 +352,13 @@ public class TMUI extends JFrame {
         Locale.setDefault(locale);
         JOptionPane.setDefaultLocale(locale);
 
-        // show splash screen
-        new TMSplashScreen(this);
-
 // create a translator
         try {
             xl = new Xlator("languages/language", locale);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Error reading language file:")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
@@ -456,7 +454,7 @@ public class TMUI extends JFrame {
         helpMenu.setText(xlate("Help"));
         helpTopicsMenuItem.setText(xlate("Help_Topics"));
         tipMenuItem.setText(xlate("Tip_of_the_Millennium"));
-        aboutMenuItem.setText(xlate("About_Tile_Molester"));
+        aboutMenuItem.setText(xlate("About_Tile_Manipulator"));
 
         UIManager.put("OptionPane.yesButtonText", xlate("Yes"));
         UIManager.put("OptionPane.noButtonText", xlate("No"));
@@ -464,8 +462,20 @@ public class TMUI extends JFrame {
         UIManager.put("OptionPane.okButtonText", xlate("OK"));
 
 ///////// Read specs
+        InputStream specStream = null;
         try {
-            TMSpecReader.readSpecsFromFile(new File("tmspec.xml"));
+            specStream = getClass().getClassLoader().getResourceAsStream("tmspec.xml");
+            if (specStream != null) {
+                TMSpecReader.readSpecsFromStream(specStream);
+            } else {
+                // Fallback: try from local disk
+                File specFile = new File("tmspec.xml");
+                if (specFile.exists()) {
+                    TMSpecReader.readSpecsFromFile(specFile);
+                } else {
+                    throw new FileNotFoundException("tmspec.xml not found in JAR or local disk.");
+                }
+            }
         }
         catch (SAXParseException e) {
             JOptionPane.showMessageDialog(this,
@@ -473,30 +483,37 @@ public class TMUI extends JFrame {
                 e.getMessage()+"\n"+
                 "("+e.getSystemId()+",\n"+
                 "line "+e.getLineNumber()+")\n",
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
         catch (SAXException e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Parser_Parse_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
         catch (ParserConfigurationException e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Parser_Config_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
         catch (IOException e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Parser_IO_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(0);
+        }
+        finally {
+            if (specStream != null) {
+                try {
+                    specStream.close();
+                } catch (IOException e) { }
+            }
         }
 
         colorcodecs = TMSpecReader.getColorCodecs();
@@ -637,7 +654,7 @@ public class TMUI extends JFrame {
         catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Save_Settings_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -666,7 +683,7 @@ public class TMUI extends JFrame {
         catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Load_Settings_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
         }
         if (doc == null) return;
@@ -2088,7 +2105,7 @@ public class TMUI extends JFrame {
                 // check if saving required/desired
                 if (img.isModified()) {
                     int retVal = JOptionPane.showConfirmDialog(this,
-                    xlate("Save_Changes_To")+" "+img.getName()+"?", "Tile Molester",
+                    xlate("Save_Changes_To")+" "+img.getName()+"?", "Tile Manipulator",
                     JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                     if (retVal == JOptionPane.YES_OPTION) {
                         doSaveCommand();
@@ -2125,7 +2142,7 @@ public class TMUI extends JFrame {
         if (frames.length == 0) {
             // no more frames left on the desktop, hide MDI menus and toolbars
             disableMDIStuff();
-            setTitle("Tile Molester");
+            setTitle("Tile Manipulator");
         }
         else {
             // select a random frame (Swing doesn't do it for you...)
@@ -2153,7 +2170,7 @@ public class TMUI extends JFrame {
         catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Save_Resources_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -2182,7 +2199,7 @@ public class TMUI extends JFrame {
                 // check if saving required/desired
                 if (img.isModified()) {
                     int retVal = JOptionPane.showConfirmDialog(this,
-                    xlate("Save_Changes_To")+" "+img.getName()+"?", "Tile Molester",
+                    xlate("Save_Changes_To")+" "+img.getName()+"?", "Tile Manipulator",
                     JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                     if (retVal == JOptionPane.YES_OPTION) {
                         try {
@@ -2224,7 +2241,7 @@ public class TMUI extends JFrame {
         desktop.revalidate();
         desktop.repaint();
         disableMDIStuff();
-        setTitle("Tile Molester");
+        setTitle("Tile Manipulator");
 
         System.gc();
     }
@@ -2249,7 +2266,7 @@ public class TMUI extends JFrame {
                     if (!file.canWrite()) {
                         JOptionPane.showMessageDialog(this,
                             xlate("File_Write_Error")+"\n"+file.getName(),
-                            "Tile Molester",
+                            "Tile Manipulator",
                             JOptionPane.ERROR_MESSAGE);
                     }
                     else {
@@ -2261,7 +2278,7 @@ public class TMUI extends JFrame {
                         catch (Exception e) {
                             JOptionPane.showMessageDialog(this,
                                 xlate("File_Save_Error")+"\n"+e.getMessage(),
-                                "Tile Molester",
+                                "Tile Manipulator",
                                 JOptionPane.ERROR_MESSAGE);
                                 return;
                         }
@@ -2306,7 +2323,7 @@ public class TMUI extends JFrame {
                 File file = fileSaveChooser.getSelectedFile();
                 view.getFileImage().setFile(file);
                 doSaveCommand();
-                setTitle("Tile Molester - "+view.getTitle());
+                setTitle("Tile Manipulator - "+view.getTitle());
             }
         }
         setSaveButtonsEnabled(false);
@@ -2525,7 +2542,7 @@ public class TMUI extends JFrame {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this,
                         xlate("Save_Bitmap_Error")+"\n"+e.getMessage(),
-                        "Tile Molester",
+                        "Tile Manipulator",
                         JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -2553,7 +2570,7 @@ public class TMUI extends JFrame {
                 catch (Exception e) {
                     JOptionPane.showMessageDialog(this,
                         xlate("Load_Bitmap_Error")+"\n"+e.getMessage(),
-                        "Tile Molester",
+                        "Tile Manipulator",
                         JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -2680,7 +2697,7 @@ public class TMUI extends JFrame {
     public void doTipCommand() {
     // Show Tip dialog
         JOptionPane.showConfirmDialog(this,
-            xlate("Drugs_Message"), "Tile Molester",
+            xlate("Drugs_Message"), "Tile Manipulator",
             JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -2694,7 +2711,7 @@ public class TMUI extends JFrame {
     public void doAboutCommand() {
     // Show About dialog
         JOptionPane.showMessageDialog(this,
-            "Tile Molester v 0.16\nby SnowBro 2003-2005", "Tile Molester",
+            "Tile Manipulator v 0.16\nby SnowBro 2003-2005", "Tile Manipulator",
             JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -3278,7 +3295,7 @@ public class TMUI extends JFrame {
             JOptionPane.showMessageDialog(
                 this,
                 "Todo.\nDouble-click on a color in the palette below to edit it.",
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.INFORMATION_MESSAGE
             );
             // let user edit the color
@@ -3443,7 +3460,7 @@ public class TMUI extends JFrame {
                 catch (Exception e) {
                     JOptionPane.showMessageDialog(this,
                         xlate("Palette_Read_Error")+"\n"+e.getMessage(),
-                        "Tile Molester",
+                        "Tile Manipulator",
                         JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -4447,7 +4464,7 @@ public class TMUI extends JFrame {
         refreshPalettesMenu();
         refreshUndoRedo();
 
-        setTitle("Tile Molester - "+view.getTitle());
+        setTitle("Tile Manipulator - "+view.getTitle());
     }
 
 /**
@@ -4627,14 +4644,14 @@ public class TMUI extends JFrame {
         catch (OutOfMemoryError e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Out_Of_Memory")+"\n"+file.length()+" bytes needed to load file.", // i18n
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Load_File_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -4664,19 +4681,19 @@ public class TMUI extends JFrame {
             catch (SAXException e) {
                 JOptionPane.showMessageDialog(this,
                     xlate("Parser_Parse_Error")+"\n"+e.getMessage(),
-                    "Tile Molester",
+                    "Tile Manipulator",
                     JOptionPane.ERROR_MESSAGE);
             }
             catch (ParserConfigurationException e) {
                 JOptionPane.showMessageDialog(this,
                     xlate("Parser_Config_Error")+"\n"+e.getMessage(),
-                    "Tile Molester",
+                    "Tile Manipulator",
                     JOptionPane.ERROR_MESSAGE);
             }
             catch (IOException e) {
                 JOptionPane.showMessageDialog(this,
                     xlate("Parser_IO_Error")+"\n"+e.getMessage(),
-                    "Tile Molester",
+                    "Tile Manipulator",
                     JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -4785,41 +4802,93 @@ public class TMUI extends JFrame {
 
     public void selectLanguage() {
         // figure out available translations
-        File dir = new File("./languages");
-        File[] files = dir.listFiles(new PropertiesFilter());
-        if ((files != null) && (files.length > 0)) {
-            Locale[] locales = new Locale[files.length];
-            String[] displayNames = new String[locales.length];
-            int defaultIndex=0;
-            for (int i=0; i<files.length; i++) {
-                String name = files[i].getName();
-                String language = name.substring(name.indexOf('_')+1, name.lastIndexOf('_'));
-                String country = name.substring(name.lastIndexOf('_')+1, name.lastIndexOf('.'));
-                locales[i] = new Locale(language, country);
-                displayNames[i] = locales[i].getDisplayName();
-                if (language.equals("en")) defaultIndex=i;
-            }
+        ClassLoader cl = getClass().getClassLoader();
+        String path = "languages";
+        java.util.List<String> fileNames = new java.util.ArrayList<String>();
 
-            // ask user to select language
-            String selectedName = (String)JOptionPane.showInputDialog(this,
-                "Choose a locale:", "Tile Molester",
+        try {
+            java.net.URL url = cl.getResource(path);
+            if (url != null && "file".equals(url.getProtocol())) {
+                // running from classes on disk
+                File dir = new File(url.toURI());
+                File[] files = dir.listFiles(new PropertiesFilter());
+                if (files != null) {
+                    for (File f : files) fileNames.add(f.getName());
+                }
+            }
+            else if (url != null && "jar".equals(url.getProtocol())) {
+                // running from a jar — list entries in the jar
+                java.net.JarURLConnection conn = (java.net.JarURLConnection) url.openConnection();
+                java.util.jar.JarFile jar = conn.getJarFile();
+                java.util.Enumeration<java.util.jar.JarEntry> entries = jar.entries();
+                while (entries.hasMoreElements()) {
+                    java.util.jar.JarEntry e = entries.nextElement();
+                    String name = e.getName();
+                    if (name.startsWith(path + "/") && !e.isDirectory() && name.toLowerCase().endsWith(".properties")) {
+                        fileNames.add(name.substring(name.lastIndexOf('/') + 1));
+                    }
+                }
+            }
+            else {
+                // fallback to relative resources directory (development)
+                File dir = new File("./languages");
+                File[] files = dir.listFiles(new PropertiesFilter());
+                if (files != null) {
+                    for (File f : files) fileNames.add(f.getName());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Build compact lists of valid locales/display names to avoid nulls
+        java.util.List<Locale> localesList = new java.util.ArrayList<>();
+        java.util.List<String> displayNamesList = new java.util.ArrayList<>();
+        int defaultIndex = 0;
+
+        for (String name : fileNames) {
+            // expects language_xx_yy.properties
+            int firstUnd = name.indexOf('_');
+            int lastUnd = name.lastIndexOf('_');
+            int dot = name.lastIndexOf('.');
+            if (firstUnd == -1 || lastUnd == -1 || dot == -1 || lastUnd == firstUnd) {
+                // skip malformed entries
+                continue;
+            }
+            try {
+                String language = name.substring(firstUnd + 1, lastUnd);
+                String country = name.substring(lastUnd + 1, dot);
+                Locale loc = new Locale(language, country);
+                localesList.add(loc);
+                displayNamesList.add(loc.getDisplayName());
+                if ("en".equals(language) && defaultIndex == 0) {
+                    // prefer English as default if present
+                    defaultIndex = displayNamesList.size() - 1;
+                }
+            } catch (Exception ex) {
+                // ignore malformed / unexpected names
+            }
+        }
+
+        if (!displayNamesList.isEmpty()) {
+            String[] displayNames = displayNamesList.toArray(new String[0]);
+            if (defaultIndex < 0 || defaultIndex >= displayNames.length) defaultIndex = 0;
+            String selectedName = (String) JOptionPane.showInputDialog(this,
+                "Choose a locale:", "Tile Manipulator",
                 JOptionPane.INFORMATION_MESSAGE, null,
                 displayNames, displayNames[defaultIndex]);
             if (selectedName != null) {
-                // find selected one
-                for (int i=0; i<locales.length; i++) {
-                    if (selectedName.equals(locales[i].getDisplayName())) {
-                        // select this locale
-                        this.locale = locales[i];
+                for (int i = 0; i < displayNames.length; i++) {
+                    if (selectedName.equals(displayNames[i])) {
+                        this.locale = localesList.get(i);
                         break;
                     }
                 }
             }
-        }
-        else {
+        } else {
             JOptionPane.showMessageDialog(this,
                 xlate("No language files found.\nPlease check your installation."),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
         }
     }

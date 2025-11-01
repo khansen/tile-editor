@@ -2,14 +2,14 @@
 *
 *    Copyright (C) 2003 Kent Hansen.
 *
-*    This file is part of Tile Molester.
+*    This file is part of Tile Manipulator.
 *
-*    Tile Molester is free software; you can redistribute it and/or modify
+*    Tile Manipulator is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
 *    the Free Software Foundation; either version 2 of the License, or
 *    (at your option) any later version.
 *
-*    Tile Molester is distributed in the hope that it will be useful,
+*    Tile Manipulator is distributed in the hope that it will be useful,
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *    GNU General Public License for more details.
@@ -37,7 +37,7 @@ public class TMNewPaletteDialog extends TMModalDialog {
     private JLabel sizeLabel;
     private JFormattedTextField sizeField;
     private JLabel formatLabel;
-    private JComboBox codecCombo;
+    private JComboBox<ColorCodec> codecCombo;
     private JRadioButton littleRadio;
     private JRadioButton bigRadio;
 
@@ -61,7 +61,7 @@ public class TMNewPaletteDialog extends TMModalDialog {
         sizeLabel = new JLabel(xlate("Size_Prompt"));
         sizeField = new JFormattedTextField();
         formatLabel = new JLabel(xlate("Format"));
-        codecCombo = new JComboBox();
+        codecCombo = new JComboBox<>();
 
         sizeField.setColumns(5);
         sizeField.getDocument().addDocumentListener(new TMDocumentListener());
@@ -125,7 +125,7 @@ public class TMNewPaletteDialog extends TMModalDialog {
 *
 **/
 
-    public void setCodecs(Vector codecs) {
+    public void setCodecs(Vector<ColorCodec> codecs) {
         codecCombo.removeAllItems();
         for (int i=0; i<codecs.size(); i++) {
             codecCombo.addItem(codecs.get(i));
