@@ -3,7 +3,7 @@
 <center>
 <table width="70%">
 <tr><td>
-<center><h1>Tile Molester</h1></center>
+<center><h1>Tile Manipulator</h1></center>
 <center>Version 0.15a (Second public release)</center>
 <ul>
 <li><a href="#INSTALLATION">Installation Notes</a></li>
@@ -25,17 +25,17 @@ This program requires the Java Runtime Environment (JRE) version 1.4.0 or later
 (1.4.2 is the one being used during development),
 which can be downloaded from <a href="http://java.sun.com">java.sun.com</a>.
 <br><p>
-Copy the Tile Molester ZIP file to a fresh directory. Unzip it (make sure to
-preserve the directory substructure). Now you can run Tile Molester by
+Copy the Tile Manipulator ZIP file to a fresh directory. Unzip it (make sure to
+preserve the directory substructure). Now you can run Tile Manipulator by
 (for example) double-clicking on <b>tm.jar</b>.
 <br><p>
-Some people have had problems running Tile Molester because JAR files
+Some people have had problems running Tile Manipulator because JAR files
 aren't associated with the Java runtime environment on their machines; typically
 it is associated with compression programs instead. (It seems this applies mostly (only?)
 to Windows, WinZip users.) If you don't want to change
-the associativity settings, you can 1) run Tile Molester from the commandline, by standing
-in the Tile Molester root directory and execute the command <font face="Courier">java -jar tm.jar</font>, or 2)
-put the preceding command in a batch file and save it in the Tile Molester root
+the associativity settings, you can 1) run Tile Manipulator from the commandline, by standing
+in the Tile Manipulator root directory and execute the command <font face="Courier">java -jar tm.jar</font>, or 2)
+put the preceding command in a batch file and save it in the Tile Manipulator root
 directory. Double-clicking on that file should then do the trick.<hr>
 <br><p>
 <a name="#WHATSNEW">
@@ -59,7 +59,7 @@ Genecyst/Kega/Gens save state & FCEUltra save state palette extraction,
 <br><p>
 <a name="#INTRODUCTION">
 <h2>Introduction</h2>
-Tile Molester, or TM for short, is a program that facilitates the viewing and
+Tile Manipulator, or TM for short, is a program that facilitates the viewing and
 editing of <i>raw</i> graphics data; that is, graphics contained in arbitrary
 binary files, where one usually doesn't have initial knowledge about the
 location and/or format of the graphics. The main area of application thus far
@@ -80,30 +80,30 @@ are intended, and edited to the satisfaction of the user.
 <br><p>
 <a name="#ARCHITECTURE">
 <h2>Architecture</h2>
-Tile Molester is designed to be as format-independent as possible. This concerns
+Tile Manipulator is designed to be as format-independent as possible. This concerns
 both graphics formats, file formats and palette formats.
 The basic, fundamental entity that fuels TM's functionality is what I've dubbed
-the "graphics codec". Simply put, a Tile Molester graphics codec is a definition
+the "graphics codec". Simply put, a Tile Manipulator graphics codec is a definition
 of how a chunk of data (more specifically, an array of bytes) is to be
 transformed (decoded) into an 8x8 grid of pixels (or <i>tile</i>), and from pixels back to data
 (encoded). In other words, it is a specification of a graphics format, and it is
-precisely the information Tile Molester needs in order to support the viewing and
+precisely the information Tile Manipulator needs in order to support the viewing and
 editing of a particular format. There are absolutely no such hard-coded formats
-supported by Tile Molester; every format is defined in an external resource
+supported by Tile Manipulator; every format is defined in an external resource
 file that is read when the program is started. The resource file that comes
 with this program distribution contains definitions of several "standard" graphics
 formats that are well-known and documented. However, the user also has the
 ability to edit the resource file and configure/add additional formats.
 <br><p>
 In addition to merely defining and describing graphics codecs, they can also be
-hooked to file extensions (filters) used by the Open File dialog in Tile Molester.
-Upon loading a file with a defined extension, Tile Molester will then automatically
+hooked to file extensions (filters) used by the Open File dialog in Tile Manipulator.
+Upon loading a file with a defined extension, Tile Manipulator will then automatically
 switch to the graphics mode associated with that extension.
 <br><p>
 Furthermore, "file listeners" can be registered to deal with constraints of
 various file formats. A file listener provides the detection of a particular
 file format, and is allowed to process file data when it is loaded and/or saved in
-Tile Molester. For example, many formats have headers with fields that should
+Tile Manipulator. For example, many formats have headers with fields that should
 be updated after data has been modified (such as checksums). Other formats
 contain interleaved data; the file listener may then de-interleave the data
 when it is loaded, so that it is readily viewable, and re-interleave it when
@@ -112,12 +112,12 @@ the file is saved.
 Palette formats and the associated file extensions for those are handled in a
 way similar to file filters. The location, size and format of palette data within
 files of particular extensions can be defined; the data is then managed automatically
-when a proper palette file is loaded in Tile Molester.
+when a proper palette file is loaded in Tile Manipulator.
 <br><p>
 The separation of graphics and file format definitions from the actual program
-gives Tile Molester substantial flexibility in dealing with a variety of files
+gives Tile Manipulator substantial flexibility in dealing with a variety of files
 and formats. Graphics-, file- and palette formats can be defined, customized,
-removed or added without requiring changes to Tile Molester itself.
+removed or added without requiring changes to Tile Manipulator itself.
 <br><p>
 Figure 1 illustrates the general idea behind graphics codecs.
 <br><p>
@@ -149,10 +149,10 @@ Pro. I will assume that the user has already had some experience with these or
 similar programs (and moreover, with GUI-driven applications in general), and
 therefore won't cover "For Dummies" aspects of program use. (If any Dummies
 should happen to read this: There might be a while before I get the backing and
-funds necessary to put out "Tile Molester For Dummies" -- patience please.)
+funds necessary to put out "Tile Manipulator For Dummies" -- patience please.)
 <br><p>
 I realize that this section is currently too brief, and will expand it once I
-get feedback concerning difficulties in using/accessing Tile Molester's
+get feedback concerning difficulties in using/accessing Tile Manipulator's
 functionality. The best way to learn about features right now is to goof around
 (or ask me questions).
 <br><p>
@@ -187,7 +187,7 @@ ones. 2-D modes are found in consoles with high resolutions and large graphics
 memories, which is the norm nowadays. Future versions of TM is likely to be geared
 more towards these systems; it is a problem right now that such modes can only be
 viewed with a horizontal resolution which is a multiple of eight. (But if I removed
-this "feature", the program wouldn't really be a <i>Tile</i> Molester, now would it. :-] )
+this "feature", the program wouldn't really be a <i>Tile</i> Manipulator, now would it. :-] )
 <br><p>
 <h3>Partioning the tile canvas into blocks</h3>
 Sometimes it is very useful to be able to divide the grid of tiles into smaller,
@@ -231,7 +231,7 @@ appearance of graphics in this format.
 <center><i>Figure 5: Without row-interleaving (top) versus with row-interleaving (bottom).</i></center>
 <br><p>
 <h3>Setting the tile codec</h3>
-As was mentioned, when you open a file for viewing/editing Tile Molester attempts to
+As was mentioned, when you open a file for viewing/editing Tile Manipulator attempts to
 guess the correct graphics mode based on the filename extension. However, it may be
 necessary to change the codec used for displaying graphics manually. This can be done
 either from the View->Tile Codec menu or by pressing TAB or Shift+TAB
@@ -240,7 +240,7 @@ In older consoles, there was usually only a single graphics format per console, 
 changing the tile codec isn't necessary once that format has been established.
 But in newer consoles, there are often a variety of formats used; for example,
 graphics in the Nintendo 64 game "Zelda: Ocarina of Time" range from 4-bit to 32-bit.
-So even though Tile Molester defaults to displaying N64 files in, say, 16-bit ARGB mode,
+So even though Tile Manipulator defaults to displaying N64 files in, say, 16-bit ARGB mode,
 don't think that that's the only mode you'll find N64 graphics in.
 <br><p>
 <h3>Bookmarks</h3>
@@ -268,22 +268,22 @@ select Palette->Add To Palettes.
 Each file has a corresponding resource file that contains the bookmarks and
 palettes recorded for that file. Such resource files are stored in XML format
 in the <font face="Courier">resources</font> folder. When you open a file,
-Tile Molester automatically loads the associated resource file.
+Tile Manipulator automatically loads the associated resource file.
 <br><p>
 <h3>Exporting and importing bitmaps</h3>
 ... can be done from the edit menu: Copy To and Paste From, respectively. You
 can save and load bitmaps in a variety of formats. After exporting a chunk of
 graphics to a bitmap, you can edit it in a more powerful graphics application
-and import the bitmap back into Tile Molester again once you're satisfied.
+and import the bitmap back into Tile Manipulator again once you're satisfied.
 <br><p>
 <hr>
 <br><p>
 <a name="#TMSPEC">
 <h2>Configuring the Specs</h2>
 The following sections are mainly for advanced users who want to extend
-the format support in Tile Molester.
+the format support in Tile Manipulator.
 <br><p>
-The Tile Molester specifications are stored in the file tmspec.xml, which is
+The Tile Manipulator specifications are stored in the file tmspec.xml, which is
 located in the same directory as tm.jar. The specs are written in XML
 (Extensible Markup Language). It is quite possible to write front-ends that can
 read, modify and write the contents of this file in a more user-friendly way,
@@ -478,7 +478,7 @@ composite tile. The tiles are assumed to be stored consecutively in memory. <i>[
 <b>Description</b>:<br>
 Defines a file filter. A <i>file filter</i> allows you to associate files of certain
 extensions with a default graphics format and display mode. The filter is
-used by the "Open File..." dialog in Tile Molester.
+used by the "Open File..." dialog in Tile Manipulator.
 <br><p>
 <b>Attributes</b>:<br>
 <font face="Courier">extensions</font> - A comma-separated list of file
@@ -507,7 +507,7 @@ a file supported by this file filter is opened. Can be
 Defines a palette filter. A <i>palette filter</i> allows you to associate palette
 files (files containing palette data) of certain extensions with information on
 how palette data can be extracted from these files. The filter is used by the
-"Import Palette..." dialog in Tile Molester.
+"Import Palette..." dialog in Tile Manipulator.
 <br><p>
 <b>Attributes</b>:<br>
 <font face="Courier">extensions</font> - A comma-separated list of file
@@ -606,13 +606,13 @@ extension of the filename. This method is <i>only</i> invoked when
 Invoked before the file is saved. The parameters are the same as for
 <font face="Courier">fileLoaded</font>.
 <br><p>
-Once the file listener has been compiled, it should be put in the Tile Molester root
+Once the file listener has been compiled, it should be put in the Tile Manipulator root
 directory and registered in the &lt;filelisteners&gt; section of the specification
 file (tmspec.xml). The listener will then start receiving events the next time Tile
-Molester is started.
+Manipulator is started.
 <br><p>
 Only one file listener is allowed to process a particular file. The order of listeners
-as defined in the specification file defines the order in which Tile Molester will
+as defined in the specification file defines the order in which Tile Manipulator will
 search for a listener when a file has been loaded. As soon as a file listener is found
 that returns <font face="Courier">true</font> in <font face="Courier">doFormatDetect</font>,
 that listener will receive both the fileLoaded and fileSaved events for the file that
@@ -627,7 +627,7 @@ and <font face="Courier">SegaGenesisFileListener</font>.
 
 <a name="#LANGUAGE">
 <h2>Language Support</h2>
-Tile Molester can easily be translated to a different language. There are two
+Tile Manipulator can easily be translated to a different language. There are two
 steps required:
 <br><p>
 1. Copy the file <font face="Courier">language_template</font> (located in the
@@ -664,7 +664,7 @@ reading this far...).
 <ul>
 <li>Out of memory error when loading really large files. Nothing much I can do with
 it as it is due to the Java Virtual Machine (JVM). It can be rectified by forcing the
-JVM to grab more system memory on startup. Run Tile Molester from the command line
+JVM to grab more system memory on startup. Run Tile Manipulator from the command line
 with the option -mxXm, where X is the number of megabytes you require; i.e.
 <font face="Courier">java -mx500M -jar tm.jar</font> to allocate 500MB.</li>
 <li>Undoing and redoing Copy/Paste operations isn't totally kosher.</li>
@@ -673,7 +673,7 @@ It's supposed to bring up a dialog where you view all the colors in the current
 palette and click on them to edit. As of yet the only way to edit colors is by
 double-clicking on a color directly in the palette panel.</li>
 <li>Bizarre problem related to full-screen modes in some emulators. If you're running
-Tile Molester, then run, say, FCEUltra in full-screen mode, then go
+Tile Manipulator, then run, say, FCEUltra in full-screen mode, then go
 back to TM, sometimes the GUI isn't repainted -- it appears totally dead. The way to
 fix it is by changing the main window state, for example by minimizing and
 subsequently maximizing it. This is either due to a bug in the screen mode restoration of
@@ -688,7 +688,7 @@ move items by dragging and dropping. Easy to implement, low priority.</li>
 a zoomed canvas) is a bit jerky, to put it mildly.</li>
 <li>In order to change languages after the first time you've run the program,
 you have to delete the file <font face="Courier">settings.xml</font> and
-restart Tile Molester.</li>
+restart Tile Manipulator.</li>
 <li>Lots of other tiny things that serve to darken my day. Oh, you know what they are.
 </ul>
 <br><p>
@@ -699,7 +699,7 @@ restart Tile Molester.</li>
 Got bugs? <a href="mailto:kenth@stud.ntnu.no">Try me</a>.
 <br><p>
 If you make a complete translation for a language which isn't currently supported
-by Tile Molester, you may send it my way and it will be posted on the website and
+by Tile Manipulator, you may send it my way and it will be posted on the website and
 included in the next version of the program.
 <br><p>
 The same goes for writing new file listeners, and defining new graphics/palette
@@ -714,7 +714,7 @@ for console binaries. The plan is to build a large database of such resources,
 so that anyone who wants to edit a particular file can look up the database
 first to see what information has already been documented about it.
 <br><p>
-Check out the <a href="http://www.stud.ntnu.no/~kenth/tm/">Tile Molester website</a> for
+Check out the <a href="http://www.stud.ntnu.no/~kenth/tm/">Tile Manipulator website</a> for
 the latest news and developments.
 </td></tr>
 </table>

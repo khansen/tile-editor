@@ -2,14 +2,14 @@
 *
 *    Copyright (C) 2003 Kent Hansen.
 *
-*    This file is part of Tile Molester.
+*    This file is part of Tile Manipulator.
 *
-*    Tile Molester is free software; you can redistribute it and/or modify
+*    Tile Manipulator is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
 *    the Free Software Foundation; either version 2 of the License, or
 *    (at your option) any later version.
 *
-*    Tile Molester is distributed in the hope that it will be useful,
+*    Tile Manipulator is distributed in the hope that it will be useful,
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *    GNU General Public License for more details.
@@ -205,7 +205,7 @@ public class TMOrganizeTreeDialog extends JDialog implements TreeModelListener {
         JOptionPane.showMessageDialog(
             this,
             "Todo.\nUse drag and drop to move items.",
-            "Tile Molester",
+            "Tile Manipulator",
             JOptionPane.INFORMATION_MESSAGE
         );
     }
@@ -221,7 +221,7 @@ public class TMOrganizeTreeDialog extends JDialog implements TreeModelListener {
         if (node.isRoot()) return;
         int retVal = JOptionPane.showConfirmDialog(this,
                         "You sure about this?", // i18n
-                        "Tile Molester",
+                        "Tile Manipulator",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.WARNING_MESSAGE);
         if (retVal == JOptionPane.OK_OPTION) {

@@ -1,4 +1,4 @@
-#################### Language template for Tile Molester #####################
+#################### Language template for Tile Manipulator #####################
 
 # File Menu
 
@@ -95,7 +95,7 @@ Arrange_Icons =
 Help = 
 Help_Topics = 
 Tip_of_the_Millennium = 
-About_Tile_Molester = 
+About_Tile_Manipulator = 
 
 # Tools
 

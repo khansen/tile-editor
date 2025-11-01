@@ -19,9 +19,9 @@ fi
 jpackage \
   --input dist \
   --dest out \
-  --name "TileMolester" \
+  --name "TileManipulator" \
   --main-jar tm.jar \
-  --main-class TileMolester \
+  --main-class TileManipulator \
   --type dmg \
   --app-version "1.0" \
   --java-options "-Xms64m -Xmx512m"

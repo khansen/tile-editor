@@ -2,14 +2,14 @@
 *
 *    Copyright (C) 2003 Kent Hansen.
 *
-*    This file is part of Tile Molester.
+*    This file is part of Tile Manipulator.
 *
-*    Tile Molester is free software; you can redistribute it and/or modify
+*    Tile Manipulator is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
 *    the Free Software Foundation; either version 2 of the License, or
 *    (at your option) any later version.
 *
-*    Tile Molester is distributed in the hope that it will be useful,
+*    Tile Manipulator is distributed in the hope that it will be useful,
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *    GNU General Public License for more details.
@@ -261,7 +261,7 @@ public class TMUI extends JFrame {
     private JMenu helpMenu = new JMenu("Help");
     private JMenuItem helpTopicsMenuItem = new JMenuItem("Help Topics");
     private JMenuItem tipMenuItem = new JMenuItem("Tip of the Millennium...");
-    private JMenuItem aboutMenuItem = new JMenuItem("About Tile Molester...");
+    private JMenuItem aboutMenuItem = new JMenuItem("About Tile Manipulator...");
 
     // button groups
     private ButtonGroup toolButtonGroup = new ButtonGroup();
@@ -285,12 +285,12 @@ public class TMUI extends JFrame {
 
 /**
 *
-* Creates a Tile Molester UI.
+* Creates a Tile Manipulator UI.
 *
 **/
 
     public TMUI() {
-        super("Tile Molester");
+        super("Tile Manipulator");
 
         setIconImage(new ImageIcon(cl.getResource("tm/icons/TMIcon.gif")).getImage());
 
@@ -357,7 +357,7 @@ public class TMUI extends JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Error reading language file:")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
@@ -453,7 +453,7 @@ public class TMUI extends JFrame {
         helpMenu.setText(xlate("Help"));
         helpTopicsMenuItem.setText(xlate("Help_Topics"));
         tipMenuItem.setText(xlate("Tip_of_the_Millennium"));
-        aboutMenuItem.setText(xlate("About_Tile_Molester"));
+        aboutMenuItem.setText(xlate("About_Tile_Manipulator"));
 
         UIManager.put("OptionPane.yesButtonText", xlate("Yes"));
         UIManager.put("OptionPane.noButtonText", xlate("No"));
@@ -470,28 +470,28 @@ public class TMUI extends JFrame {
                 e.getMessage()+"\n"+
                 "("+e.getSystemId()+",\n"+
                 "line "+e.getLineNumber()+")\n",
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
         catch (SAXException e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Parser_Parse_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
         catch (ParserConfigurationException e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Parser_Config_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
         catch (IOException e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Parser_IO_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
@@ -634,7 +634,7 @@ public class TMUI extends JFrame {
         catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Save_Settings_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -663,7 +663,7 @@ public class TMUI extends JFrame {
         catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Load_Settings_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
         }
         if (doc == null) return;
@@ -2085,7 +2085,7 @@ public class TMUI extends JFrame {
                 // check if saving required/desired
                 if (img.isModified()) {
                     int retVal = JOptionPane.showConfirmDialog(this,
-                    xlate("Save_Changes_To")+" "+img.getName()+"?", "Tile Molester",
+                    xlate("Save_Changes_To")+" "+img.getName()+"?", "Tile Manipulator",
                     JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                     if (retVal == JOptionPane.YES_OPTION) {
                         doSaveCommand();
@@ -2122,7 +2122,7 @@ public class TMUI extends JFrame {
         if (frames.length == 0) {
             // no more frames left on the desktop, hide MDI menus and toolbars
             disableMDIStuff();
-            setTitle("Tile Molester");
+            setTitle("Tile Manipulator");
         }
         else {
             // select a random frame (Swing doesn't do it for you...)
@@ -2150,7 +2150,7 @@ public class TMUI extends JFrame {
         catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Save_Resources_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -2179,7 +2179,7 @@ public class TMUI extends JFrame {
                 // check if saving required/desired
                 if (img.isModified()) {
                     int retVal = JOptionPane.showConfirmDialog(this,
-                    xlate("Save_Changes_To")+" "+img.getName()+"?", "Tile Molester",
+                    xlate("Save_Changes_To")+" "+img.getName()+"?", "Tile Manipulator",
                     JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                     if (retVal == JOptionPane.YES_OPTION) {
                         try {
@@ -2221,7 +2221,7 @@ public class TMUI extends JFrame {
         desktop.revalidate();
         desktop.repaint();
         disableMDIStuff();
-        setTitle("Tile Molester");
+        setTitle("Tile Manipulator");
 
         System.gc();
     }
@@ -2246,7 +2246,7 @@ public class TMUI extends JFrame {
                     if (!file.canWrite()) {
                         JOptionPane.showMessageDialog(this,
                             xlate("File_Write_Error")+"\n"+file.getName(),
-                            "Tile Molester",
+                            "Tile Manipulator",
                             JOptionPane.ERROR_MESSAGE);
                     }
                     else {
@@ -2258,7 +2258,7 @@ public class TMUI extends JFrame {
                         catch (Exception e) {
                             JOptionPane.showMessageDialog(this,
                                 xlate("File_Save_Error")+"\n"+e.getMessage(),
-                                "Tile Molester",
+                                "Tile Manipulator",
                                 JOptionPane.ERROR_MESSAGE);
                                 return;
                         }
@@ -2303,7 +2303,7 @@ public class TMUI extends JFrame {
                 File file = fileSaveChooser.getSelectedFile();
                 view.getFileImage().setFile(file);
                 doSaveCommand();
-                setTitle("Tile Molester - "+view.getTitle());
+                setTitle("Tile Manipulator - "+view.getTitle());
             }
         }
         setSaveButtonsEnabled(false);
@@ -2522,7 +2522,7 @@ public class TMUI extends JFrame {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this,
                         xlate("Save_Bitmap_Error")+"\n"+e.getMessage(),
-                        "Tile Molester",
+                        "Tile Manipulator",
                         JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -2550,7 +2550,7 @@ public class TMUI extends JFrame {
                 catch (Exception e) {
                     JOptionPane.showMessageDialog(this,
                         xlate("Load_Bitmap_Error")+"\n"+e.getMessage(),
-                        "Tile Molester",
+                        "Tile Manipulator",
                         JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -2677,7 +2677,7 @@ public class TMUI extends JFrame {
     public void doTipCommand() {
     // Show Tip dialog
         JOptionPane.showConfirmDialog(this,
-            xlate("Drugs_Message"), "Tile Molester",
+            xlate("Drugs_Message"), "Tile Manipulator",
             JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -2691,7 +2691,7 @@ public class TMUI extends JFrame {
     public void doAboutCommand() {
     // Show About dialog
         JOptionPane.showMessageDialog(this,
-            "Tile Molester v 0.16\nby SnowBro 2003-2005", "Tile Molester",
+            "Tile Manipulator v 0.16\nby SnowBro 2003-2005", "Tile Manipulator",
             JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -3275,7 +3275,7 @@ public class TMUI extends JFrame {
             JOptionPane.showMessageDialog(
                 this,
                 "Todo.\nDouble-click on a color in the palette below to edit it.",
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.INFORMATION_MESSAGE
             );
             // let user edit the color
@@ -3440,7 +3440,7 @@ public class TMUI extends JFrame {
                 catch (Exception e) {
                     JOptionPane.showMessageDialog(this,
                         xlate("Palette_Read_Error")+"\n"+e.getMessage(),
-                        "Tile Molester",
+                        "Tile Manipulator",
                         JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -4444,7 +4444,7 @@ public class TMUI extends JFrame {
         refreshPalettesMenu();
         refreshUndoRedo();
 
-        setTitle("Tile Molester - "+view.getTitle());
+        setTitle("Tile Manipulator - "+view.getTitle());
     }
 
 /**
@@ -4624,14 +4624,14 @@ public class TMUI extends JFrame {
         catch (OutOfMemoryError e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Out_Of_Memory")+"\n"+file.length()+" bytes needed to load file.", // i18n
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                 xlate("Load_File_Error")+"\n"+e.getMessage(),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -4661,19 +4661,19 @@ public class TMUI extends JFrame {
             catch (SAXException e) {
                 JOptionPane.showMessageDialog(this,
                     xlate("Parser_Parse_Error")+"\n"+e.getMessage(),
-                    "Tile Molester",
+                    "Tile Manipulator",
                     JOptionPane.ERROR_MESSAGE);
             }
             catch (ParserConfigurationException e) {
                 JOptionPane.showMessageDialog(this,
                     xlate("Parser_Config_Error")+"\n"+e.getMessage(),
-                    "Tile Molester",
+                    "Tile Manipulator",
                     JOptionPane.ERROR_MESSAGE);
             }
             catch (IOException e) {
                 JOptionPane.showMessageDialog(this,
                     xlate("Parser_IO_Error")+"\n"+e.getMessage(),
-                    "Tile Molester",
+                    "Tile Manipulator",
                     JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -4799,7 +4799,7 @@ public class TMUI extends JFrame {
 
             // ask user to select language
             String selectedName = (String)JOptionPane.showInputDialog(this,
-                "Choose a locale:", "Tile Molester",
+                "Choose a locale:", "Tile Manipulator",
                 JOptionPane.INFORMATION_MESSAGE, null,
                 displayNames, displayNames[defaultIndex]);
             if (selectedName != null) {
@@ -4816,7 +4816,7 @@ public class TMUI extends JFrame {
         else {
             JOptionPane.showMessageDialog(this,
                 xlate("No language files found.\nPlease check your installation."),
-                "Tile Molester",
+                "Tile Manipulator",
                 JOptionPane.ERROR_MESSAGE);
         }
     }

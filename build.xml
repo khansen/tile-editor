@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="TileMolester" default="build">
+<project name="TileManipulator" default="build">
     <!-- Define project properties -->
     <property name="src.dir" value="."/>
     <property name="build.dir" value="classes"/>
@@ -35,7 +35,7 @@
                 <include name="**/*.dtd"/>
             </fileset>
             <manifest>
-                <attribute name="Main-Class" value="TileMolester"/>
+                <attribute name="Main-Class" value="TileManipulator"/>
             </manifest>
         </jar>
     </target>
