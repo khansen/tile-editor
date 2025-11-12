@@ -58,6 +58,26 @@ public class XMLParser {
                             return is;
                         }
                     }
+                    else if (systemId != null && systemId.endsWith("tmres.dtd")) {
+                        // Try to load tmres.dtd from classpath
+                        InputStream dtdStream = XMLParser.class.getClassLoader().getResourceAsStream("resources/tmres.dtd");
+                        if (dtdStream != null) {
+                            InputSource is = new InputSource(dtdStream);
+                            is.setPublicId(publicId);
+                            is.setSystemId(systemId);
+                            return is;
+                        }
+                    }
+                    else if (systemId != null && systemId.endsWith("settings.dtd")) {
+                        // Try to load settings.dtd from classpath
+                        InputStream dtdStream = XMLParser.class.getClassLoader().getResourceAsStream("settings.dtd");
+                        if (dtdStream != null) {
+                            InputSource is = new InputSource(dtdStream);
+                            is.setPublicId(publicId);
+                            is.setSystemId(systemId);
+                            return is;
+                        }
+                    }
                     // Default behavior
                     return null;
                 }

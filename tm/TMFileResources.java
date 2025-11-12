@@ -29,6 +29,8 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -336,19 +338,20 @@ public class TMFileResources {
 /**
 *
 * Gets the default resource filename for the given file.
-* Currently, this is [filename-extension+".xml"]
+* Currently, this is [filename+".xml"]
 *
 **/
 
     public static File getResourceFileFor(File file) {
         // determine name of XML resource file based on filename
-        String name = file.getName();
-        int i = name.lastIndexOf('.');
-        if (i != -1) {
-            name = name.substring(0, i);
+        Path base = AppPaths.appDataDir("Tile Manipulator").resolve("resources");
+        try {
+            Files.createDirectories(base);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not create resources directory", e);
         }
-        name += ".xml";
-        return new File("./resources/"+name);
+        String xmlFileName = file.getName() + ".xml";
+        return base.resolve(xmlFileName).toFile();
     }
 
     private Element getChildTag(Element e, String Tag, int i) {
