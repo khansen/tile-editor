@@ -278,7 +278,7 @@ public class TMUI extends JFrame {
     private Hashtable<byte[], TMFileListener> fileListenerHashtable = new Hashtable<byte[], TMFileListener>();
 
     private Xlator xl;
-    private File settingsFile = new File("settings.xml");
+    private File settingsFile = SettingsManager.settingsFile().toFile();
 
     private Locale locale = Locale.getDefault();
     private boolean viewStatusBar=true;
@@ -600,6 +600,20 @@ public class TMUI extends JFrame {
 //                setExtendedState(state);
             }
         });
+
+        // macOS app-quit (⌘Q, Dock > Quit)
+        try {
+          java.awt.Desktop d = java.awt.Desktop.getDesktop();
+          if (d.isSupported(java.awt.Desktop.Action.APP_QUIT_HANDLER)) {
+            d.setQuitHandler((e, response) -> {
+              if (doExitCommand()) {
+                response.performQuit();
+              } else {
+                response.cancelQuit();
+              }
+            });
+          }
+        } catch (UnsupportedOperationException ignore) { /* non-desktop env */ }
 
         // Center the frame
         int inset = 128;
@@ -2358,13 +2372,15 @@ public class TMUI extends JFrame {
 *
 **/
 
-    public void doExitCommand() {
+    public boolean doExitCommand() {
         doCloseAllCommand();
         // if all frames were closed, the operation was successful and we can exit.
         if (desktop.getAllFrames().length == 0) {
             saveSettings();
             System.exit(0);
+            return true;
         }
+        return false;
     }
 
 /**
@@ -2711,7 +2727,7 @@ public class TMUI extends JFrame {
     public void doAboutCommand() {
     // Show About dialog
         JOptionPane.showMessageDialog(this,
-            "Tile Manipulator v 0.16\nby SnowBro 2003-2005", "Tile Manipulator",
+            "Tile Manipulator v1.0.1\nby SnowBro 2003-2005, 2025", "Tile Manipulator",
             JOptionPane.INFORMATION_MESSAGE);
     }
 

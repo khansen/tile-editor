@@ -99,7 +99,7 @@ public class TileManipulator {
                         SwingUtilities.invokeLater(() -> {
                             ImageIcon icon = (iconImage != null) ? new ImageIcon(iconImage) : null;
                             JOptionPane.showMessageDialog(null,
-                                "Tile Manipulator\nVersion 1.0\n(c) 2025 Kent Hansen",
+                                "Tile Manipulator\nVersion 1.0.1\n(c) 2025 Kent Hansen",
                                 "About Tile Manipulator",
                                 JOptionPane.INFORMATION_MESSAGE,
                                 icon);
