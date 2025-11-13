@@ -48,34 +48,23 @@ public class XMLParser {
             builder.setEntityResolver(new EntityResolver() {
                 @Override
                 public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-                    if (systemId != null && systemId.endsWith("tmspec.dtd")) {
-                        // Try to load tmspec.dtd from classpath
-                        InputStream dtdStream = XMLParser.class.getClassLoader().getResourceAsStream("tmspec.dtd");
-                        if (dtdStream != null) {
-                            InputSource is = new InputSource(dtdStream);
-                            is.setPublicId(publicId);
-                            is.setSystemId(systemId);
-                            return is;
+                    if (systemId != null) {
+                        String dtdPath = null;
+                        if (systemId.endsWith("tmspec.dtd")) {
+                            dtdPath = "tmspec.dtd";
+                        } else if (systemId.endsWith("tmres.dtd")) {
+                            dtdPath = "resources/tmres.dtd";
+                        } else if (systemId.endsWith("settings.dtd")) {
+                            dtdPath = "settings.dtd";
                         }
-                    }
-                    else if (systemId != null && systemId.endsWith("tmres.dtd")) {
-                        // Try to load tmres.dtd from classpath
-                        InputStream dtdStream = XMLParser.class.getClassLoader().getResourceAsStream("resources/tmres.dtd");
-                        if (dtdStream != null) {
-                            InputSource is = new InputSource(dtdStream);
-                            is.setPublicId(publicId);
-                            is.setSystemId(systemId);
-                            return is;
-                        }
-                    }
-                    else if (systemId != null && systemId.endsWith("settings.dtd")) {
-                        // Try to load settings.dtd from classpath
-                        InputStream dtdStream = XMLParser.class.getClassLoader().getResourceAsStream("settings.dtd");
-                        if (dtdStream != null) {
-                            InputSource is = new InputSource(dtdStream);
-                            is.setPublicId(publicId);
-                            is.setSystemId(systemId);
-                            return is;
+                        if (dtdPath != null) {
+                            InputStream dtdStream = XMLParser.class.getClassLoader().getResourceAsStream(dtdPath);
+                            if (dtdStream != null) {
+                                InputSource is = new InputSource(dtdStream);
+                                is.setPublicId(publicId);
+                                is.setSystemId(systemId);
+                                return is;
+                            }
                         }
                     }
                     // Default behavior
