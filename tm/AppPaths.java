@@ -8,7 +8,10 @@ public final class AppPaths {
     String os = System.getProperty("os.name").toLowerCase(Locale.ROOT);
     String home = System.getProperty("user.home");
     if (os.contains("mac"))  return Paths.get(home, "Library", "Application Support", appName);
-    if (os.contains("win"))  return Paths.get(System.getenv("APPDATA"), appName);
+    if (os.contains("win")) {
+      String appData = System.getenv("APPDATA");
+      if (appData != null && !appData.isEmpty()) return Paths.get(appData, appName);
+    }
     String xdg = System.getenv("XDG_DATA_HOME");
     if (xdg != null && !xdg.isEmpty()) return Paths.get(xdg, appName);
     return Paths.get(home, ".local", "share", appName); // Linux fallback

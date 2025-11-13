@@ -10,7 +10,7 @@ public final class SettingsManager {
         try {
             Files.createDirectories(dir);
         } catch (Exception e) {
-            System.err.println("Failed to create settings directory: " + e.getMessage());
+            throw new RuntimeException("Failed to create settings directory: " + e.getMessage(), e);
         }
         return dir.resolve(FILE_NAME);
     }
