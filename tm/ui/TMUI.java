@@ -2727,7 +2727,7 @@ public class TMUI extends JFrame {
     public void doAboutCommand() {
     // Show About dialog
         JOptionPane.showMessageDialog(this,
-            "Tile Manipulator v 0.16\nby SnowBro 2003-2005", "Tile Manipulator",
+            "Tile Manipulator v1.0.1\nby SnowBro 2003-2005, 2025", "Tile Manipulator",
             JOptionPane.INFORMATION_MESSAGE);
     }
 
