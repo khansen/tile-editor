@@ -716,7 +716,7 @@ public class TMUI extends JFrame {
                 if (st.countTokens() != 2) continue;
                 String language = st.nextToken();
                 String country = st.nextToken();
-                locale = new Locale(language, country);
+                locale = Locale.of(language, country);
             }
             if (key.equals("viewStatusBar")) {
                 viewStatusBar = value.equals("true");
@@ -1232,7 +1232,7 @@ public class TMUI extends JFrame {
 **/
 
     private void initMenuBar() {
-        int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
         boolean onMac = System.getProperty("os.name").equals("Mac OS X");
         // File menu
         fileMenu.setMnemonic(KeyEvent.VK_F);
@@ -4874,7 +4874,7 @@ public class TMUI extends JFrame {
             try {
                 String language = name.substring(firstUnd + 1, lastUnd);
                 String country = name.substring(lastUnd + 1, dot);
-                Locale loc = new Locale(language, country);
+                Locale loc = Locale.of(language, country);
                 localesList.add(loc);
                 displayNamesList.add(loc.getDisplayName());
                 if ("en".equals(language) && defaultIndex == 0) {

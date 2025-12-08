@@ -302,25 +302,31 @@ public class TMSpecReader {
         NodeList fltags = tmspec.getElementsByTagName("filelistener");
         for (int i=0; i<fltags.getLength(); i++) {
             Element fl = (Element)fltags.item(i);
-            String extlist = fl.getAttribute("extensions");
             String classname = fl.getAttribute("classname");
-            Class c;
+            String fqcn = "tm.filelistener." + classname;
+            Class<?> raw;
             try {
-                c = loader.loadClass("tm.filelistener." + classname);
-            }
-            catch (Exception e) {
-                System.out.println("Failed to load " + classname);
+                raw = loader.loadClass(fqcn);
+            } catch (ClassNotFoundException e) {
+                System.err.println("Failed to load " + fqcn + ": " + e);
                 continue;
             }
-            Object o;
-            try {
-                o = c.newInstance();
-            }
-            catch (Exception e) {
-                System.out.println("Failed to instantiate " + classname);
+
+            if (!TMFileListener.class.isAssignableFrom(raw)) {
+                System.err.println(fqcn + " does not implement TMFileListener");
                 continue;
             }
-            filelisteners.add((TMFileListener)o);
+
+            @SuppressWarnings("unchecked")
+            Class<? extends TMFileListener> clazz =
+                    (Class<? extends TMFileListener>) raw;
+
+            try {
+                TMFileListener listener = clazz.getDeclaredConstructor().newInstance();
+                filelisteners.add(listener);
+            } catch (ReflectiveOperationException e) {
+                System.err.println("Failed to instantiate " + fqcn + ": " + e);
+            }
         }
     }
 
