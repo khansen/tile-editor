@@ -71,11 +71,9 @@ public class TMBitmapExporter {
                 throw new Exception("No JPEG writer available.");
             }
             ImageWriter jpegEncoder = jpegWriters.next();
-            try {
-                FileImageOutputStream fios = new FileImageOutputStream(file);
+            try (FileImageOutputStream fios = new FileImageOutputStream(file)) {
                 jpegEncoder.setOutput(fios);
                 jpegEncoder.write(convertToRenderedImage(img));
-                fios.close();
             }
             catch (Exception e) {
                 throw e;
