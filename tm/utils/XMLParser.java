@@ -127,11 +127,13 @@ public class XMLParser {
     public static String escapeXML(String s) {
         if (s == null) return "";
         String result = s;
-        result = result.replace("&", "&amp;");
+        // Note: perform ampersand replacement last to avoid corrupting entities
+        // introduced by the earlier replacements (e.g. "&lt;").
         result = result.replace("<", "&lt;");
         result = result.replace(">", "&gt;");
         result = result.replace("\"", "&quot;");
         result = result.replace("'", "&apos;");
+        result = result.replace("&", "&amp;");
         return result;
     }
 
