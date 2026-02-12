@@ -85,8 +85,9 @@ public class ProgressDialog extends JDialog implements ActionListener {
 **/
 
     public void actionPerformed(ActionEvent e) {
-        progressBar.setValue(thread.getPercentageCompleted());
-        if (thread.getPercentageCompleted() == 100) {
+        int percent = thread.getPercentageCompleted();
+        progressBar.setValue(percent);
+        if (!thread.isAlive() || percent >= 100) {
             timer.stop();
             setVisible(false);
         }

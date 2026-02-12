@@ -19,6 +19,7 @@
 package tm.treenodes;
 
 import tm.tilecodecs.TileCodec;
+import tm.utils.XMLParser;
 
 /**
 *
@@ -217,7 +218,7 @@ public class BookmarkItemNode extends TMTreeNode {
         s.append(" codec=\""+codec.getID()+"\"");
         s.append(">\n");
         s.append(getIndent()+"  ");
-        s.append("<description>"+description+"</description>\n");
+        s.append("<description>"+XMLParser.escapeXML(description)+"</description>\n");
         s.append(getIndent());
         s.append("</bookmark>\n");
         return s.toString();

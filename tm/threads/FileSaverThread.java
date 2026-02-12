@@ -32,6 +32,7 @@ public class FileSaverThread extends ProgressThread {
     private RandomAccessFile raf=null;
     private int bytesLeft;
     private byte[] contents;
+    private IOException failure;
 
     public FileSaverThread(byte[] contents, File file)
         throws FileNotFoundException, IOException {
@@ -39,6 +40,7 @@ public class FileSaverThread extends ProgressThread {
         this.contents = contents;
         try {
             raf = new RandomAccessFile(file, "rw");
+            raf.setLength(0);
             raf.seek(0);
         }
         catch (FileNotFoundException e) {
@@ -52,32 +54,35 @@ public class FileSaverThread extends ProgressThread {
     }
 
     public int getPercentageCompleted() {
+        if (contents.length == 0) return 100;
         int result = (int)((long)(((long)contents.length - (long)bytesLeft) * 100) / (long)contents.length);
         return result;
     }
 
     public void run() {
-        while (bytesLeft > 0) {
-            if (bytesLeft > CHUNK_SIZE) {
-                try {
-                    raf.write(contents, contents.length - bytesLeft, CHUNK_SIZE);
-                }
-                catch (Exception e) { }
-                bytesLeft -= CHUNK_SIZE;
-            }
-            else {
-                try {
-                    raf.write(contents, contents.length - bytesLeft, bytesLeft);
-                }
-                catch (Exception e) { }
-                bytesLeft = 0;
-            }
-            Thread.yield();
-        }
         try {
-            raf.close();
-        } catch (Exception e) { }
-        // done saving data
+            while (bytesLeft > 0) {
+                int chunkSize = Math.min(bytesLeft, CHUNK_SIZE);
+                int offset = contents.length - bytesLeft;
+                raf.write(contents, offset, chunkSize);
+                bytesLeft -= chunkSize;
+                Thread.yield();
+            }
+        }
+        catch (IOException e) {
+            failure = e;
+            bytesLeft = 0;
+        }
+        finally {
+            try {
+                raf.close();
+            } catch (Exception e) { }
+            // done saving data
+        }
+    }
+
+    public IOException getFailure() {
+        return failure;
     }
 
 }

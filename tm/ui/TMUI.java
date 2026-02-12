@@ -680,7 +680,7 @@ public class TMUI extends JFrame {
 **/
 
     public String makePropertyTag(String key, String value) {
-        return "  <property key=\""+key+"\" value=\""+value+"\"/>\n";
+        return "  <property key=\""+XMLParser.escapeXML(key)+"\" value=\""+XMLParser.escapeXML(value)+"\"/>\n";
     }
 
 /**
@@ -2305,6 +2305,13 @@ public class TMUI extends JFrame {
 
                         // save it!
                         new ProgressDialog(this, thread);
+                        if (thread.getFailure() != null) {
+                            JOptionPane.showMessageDialog(this,
+                                xlate("File_Save_Error")+"\n"+thread.getFailure().getMessage(),
+                                "Tile Manipulator",
+                                JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
                         img.setModified(false);
                         setSaveButtonsEnabled(false);
 
@@ -2340,7 +2347,6 @@ public class TMUI extends JFrame {
                 setTitle("Tile Manipulator - "+view.getTitle());
             }
         }
-        setSaveButtonsEnabled(false);
     }
 
 /**
@@ -2727,7 +2733,7 @@ public class TMUI extends JFrame {
     public void doAboutCommand() {
     // Show About dialog
         JOptionPane.showMessageDialog(this,
-            "Tile Manipulator v1.0.1\nby SnowBro 2003-2005, 2025", "Tile Manipulator",
+            "Tile Manipulator v1.0.2\nby SnowBro 2003-2005, 2025, 2026", "Tile Manipulator",
             JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -3466,12 +3472,9 @@ public class TMUI extends JFrame {
                 byte[] data = new byte[size * codec.getBytesPerPixel()];
 
                 // read the palette data
-                RandomAccessFile raf=null;
-                try {
-                    raf = new RandomAccessFile(file, "r");
+                try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
                     raf.seek(offset);
-                    raf.read(data);
-                    raf.close();
+                    raf.readFully(data);
                 }
                 catch (Exception e) {
                     JOptionPane.showMessageDialog(this,
@@ -4671,7 +4674,14 @@ public class TMUI extends JFrame {
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
-        ProgressDialog dialog = new ProgressDialog(this, thread);
+        new ProgressDialog(this, thread);
+        if (thread.getFailure() != null) {
+            JOptionPane.showMessageDialog(this,
+                xlate("Load_File_Error")+"\n"+thread.getFailure().getMessage(),
+                "Tile Manipulator",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         byte[] contents = thread.getContents();
 
         // see if a filelistener should receive notification
