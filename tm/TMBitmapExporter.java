@@ -29,6 +29,7 @@ import java.awt.Image;
 import java.awt.image.RenderedImage;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
+import java.util.Iterator;
 
 /**
 *
@@ -65,17 +66,19 @@ public class TMBitmapExporter {
             }
         }
         else if (ext.equals("jpg")) {
-            ImageWriter jpegEncoder = (ImageWriter)ImageIO.getImageWritersByFormatName("jpeg").next();
-            if (jpegEncoder != null) {
-                try {
-                    FileImageOutputStream fios = new FileImageOutputStream(file);
-                    jpegEncoder.setOutput(fios);
-                    jpegEncoder.write(convertToRenderedImage(img));
-                    fios.close();
-                }
-                catch (Exception e) {
-                    throw e;
-                }
+            Iterator<ImageWriter> jpegWriters = ImageIO.getImageWritersByFormatName("jpeg");
+            if (!jpegWriters.hasNext()) {
+                throw new Exception("No JPEG writer available.");
+            }
+            ImageWriter jpegEncoder = jpegWriters.next();
+            try {
+                FileImageOutputStream fios = new FileImageOutputStream(file);
+                jpegEncoder.setOutput(fios);
+                jpegEncoder.write(convertToRenderedImage(img));
+                fios.close();
+            }
+            catch (Exception e) {
+                throw e;
             }
         }
         else if (ext.equals("png")) {

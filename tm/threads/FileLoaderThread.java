@@ -32,6 +32,7 @@ public class FileLoaderThread extends ProgressThread {
     BufferedInputStream bis=null;
     private int bytesLeft;
     private byte[] contents;
+    private IOException failure;
 
     public FileLoaderThread(File file) throws OutOfMemoryError, FileNotFoundException {
         super();
@@ -51,32 +52,41 @@ public class FileLoaderThread extends ProgressThread {
     }
 
     public int getPercentageCompleted() {
+        if (contents.length == 0) return 100;
         int result = (int)((long)(((long)contents.length - (long)bytesLeft) * 100) / (long)contents.length);
         return result;
     }
 
     public void run() {
-        while (bytesLeft > 0) {
-            if (bytesLeft > CHUNK_SIZE) {
-                try {
-                    bis.read(contents, contents.length - bytesLeft, CHUNK_SIZE);
-                }
-                catch (Exception e) { }
-                bytesLeft -= CHUNK_SIZE;
-            }
-            else {
-                try {
-                    bis.read(contents, contents.length - bytesLeft, bytesLeft);
-                }
-                catch (Exception e) { }
-                bytesLeft = 0;
-            }
-            Thread.yield();
-        }
         try {
-            bis.close();
-        } catch (Exception e) { }
-        // done loading data
+            while (bytesLeft > 0) {
+                int chunkSize = Math.min(bytesLeft, CHUNK_SIZE);
+                int offset = contents.length - bytesLeft;
+                int bytesRead = bis.read(contents, offset, chunkSize);
+                if (bytesRead < 0) {
+                    throw new EOFException("Unexpected end of file.");
+                }
+                if (bytesRead == 0) {
+                    throw new IOException("Read returned 0 bytes without reaching EOF.");
+                }
+                bytesLeft -= bytesRead;
+                Thread.yield();
+            }
+        }
+        catch (IOException e) {
+            failure = e;
+            bytesLeft = 0;
+        }
+        finally {
+            try {
+                bis.close();
+            } catch (Exception e) { }
+            // done loading data
+        }
+    }
+
+    public IOException getFailure() {
+        return failure;
     }
 
     public byte[] getContents() {

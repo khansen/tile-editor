@@ -124,4 +124,15 @@ public class XMLParser {
         return value;
     }   // getNodeValue()
 
+    public static String escapeXML(String s) {
+        if (s == null) return "";
+        String result = s;
+        result = result.replace("&", "&amp;");
+        result = result.replace("<", "&lt;");
+        result = result.replace(">", "&gt;");
+        result = result.replace("\"", "&quot;");
+        result = result.replace("'", "&apos;");
+        return result;
+    }
+
 }

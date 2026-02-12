@@ -21,6 +21,7 @@ package tm.treenodes;
 import tm.TMPalette;
 import tm.colorcodecs.ColorCodec;
 import tm.utils.HexStringConverter;
+import tm.utils.XMLParser;
 
 /**
 *
@@ -90,7 +91,7 @@ public class PaletteItemNode extends TMTreeNode {
         s.append(" endianness=\""+(palette.getEndianness() == ColorCodec.LITTLE_ENDIAN ? "little" : "big")+"\"");
         s.append(">\n");
         s.append(getIndent()+"  ");
-        s.append("<description>"+description+"</description>\n");
+        s.append("<description>"+XMLParser.escapeXML(description)+"</description>\n");
         if (palette.isDirect()) {
             s.append(getIndent()+"  ");
             s.append("<data>");

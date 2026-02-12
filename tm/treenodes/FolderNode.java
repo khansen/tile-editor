@@ -18,6 +18,8 @@
 
 package tm.treenodes;
 
+import tm.utils.XMLParser;
+
 /**
 *
 * A folder.
@@ -63,7 +65,7 @@ public class FolderNode extends TMTreeNode {
         s.append(getIndent());
         s.append("<folder>\n");
         s.append(getIndent()+"  ");
-        s.append("<name>"+name+"</name>\n");
+        s.append("<name>"+XMLParser.escapeXML(name)+"</name>\n");
         TMTreeNode[] children = getChildren();
         for (int i=0; i<children.length; i++) {
             s.append(((TMTreeNode)children[i]).toXML());
