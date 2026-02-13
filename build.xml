@@ -3,16 +3,19 @@
     <!-- Define project properties -->
     <property name="src.dir" value="."/>
     <property name="build.dir" value="classes"/>
+    <property name="test.build.dir" value="classes-test"/>
     <property name="dist.dir" value="dist"/>
 
     <target name="clean" description="remove intermediate files">
         <delete dir="${build.dir}"/>
+        <delete dir="${test.build.dir}"/>
         <delete dir="${dist.dir}"/>
         <delete file="tm.jar"/>
     </target>
 
     <target name="init">
         <mkdir dir="${build.dir}"/>
+        <mkdir dir="${test.build.dir}"/>
         <mkdir dir="${dist.dir}"/>
     </target>
 
@@ -20,8 +23,23 @@
         <javac includeantruntime="false"
                srcdir="${src.dir}"
                destdir="${build.dir}"
+               excludes="tm/tests/**"
                debug="true"
                encoding="UTF-8">
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+
+    <target name="compile-tests" depends="compile" description="compile regression tests to separate classes dir">
+        <javac includeantruntime="false"
+               srcdir="${src.dir}"
+               destdir="${test.build.dir}"
+               includes="tm/tests/**/*.java"
+               debug="true"
+               encoding="UTF-8">
+            <classpath>
+                <pathelement path="${build.dir}"/>
+            </classpath>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
@@ -68,6 +86,15 @@
     <target name="run" depends="jar" description="run the application">
         <java jar="${dist.dir}/tm.jar" fork="true">
             <jvmarg line="${run.jvmargs}"/>
+        </java>
+    </target>
+
+    <target name="test" depends="compile-tests" description="run regression tests">
+        <java classname="tm.tests.RegressionTests" fork="true" failonerror="true">
+            <classpath>
+                <pathelement path="${build.dir}"/>
+                <pathelement path="${test.build.dir}"/>
+            </classpath>
         </java>
     </target>
 </project>
