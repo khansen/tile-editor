@@ -28,7 +28,7 @@
 
     <target name="jar" depends="compile" description="create a Jar file for the application">
         <jar destfile="${dist.dir}/tm.jar">
-            <fileset dir="${build.dir}" includes="**/*.class"/>
+            <fileset dir="${build.dir}" includes="**/*.class" excludes="tm/tests/**"/>
             <fileset dir="${src.dir}">
                 <include name="**/*.gif"/>
                 <include name="**/*.png"/>
