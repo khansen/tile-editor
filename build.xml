@@ -70,4 +70,12 @@
             <jvmarg line="${run.jvmargs}"/>
         </java>
     </target>
+
+    <target name="test" depends="compile" description="run regression tests">
+        <java classname="tm.tests.RegressionTests" fork="true" failonerror="true">
+            <classpath>
+                <pathelement path="${build.dir}"/>
+            </classpath>
+        </java>
+    </target>
 </project>
