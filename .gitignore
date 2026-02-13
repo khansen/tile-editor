@@ -2,6 +2,7 @@ bundles
 classes
 resources
 settings.xml
+classes-test/
 dist/
 out/
 /TileManipulator.iconset/

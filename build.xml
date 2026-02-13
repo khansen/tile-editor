@@ -3,16 +3,19 @@
     <!-- Define project properties -->
     <property name="src.dir" value="."/>
     <property name="build.dir" value="classes"/>
+    <property name="test.build.dir" value="classes-test"/>
     <property name="dist.dir" value="dist"/>
 
     <target name="clean" description="remove intermediate files">
         <delete dir="${build.dir}"/>
+        <delete dir="${test.build.dir}"/>
         <delete dir="${dist.dir}"/>
         <delete file="tm.jar"/>
     </target>
 
     <target name="init">
         <mkdir dir="${build.dir}"/>
+        <mkdir dir="${test.build.dir}"/>
         <mkdir dir="${dist.dir}"/>
     </target>
 
@@ -20,15 +23,30 @@
         <javac includeantruntime="false"
                srcdir="${src.dir}"
                destdir="${build.dir}"
+               excludes="tm/tests/**"
                debug="true"
                encoding="UTF-8">
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
 
+    <target name="compile-tests" depends="compile" description="compile regression tests to separate classes dir">
+        <javac includeantruntime="false"
+               srcdir="${src.dir}"
+               destdir="${test.build.dir}"
+               includes="tm/tests/**/*.java"
+               debug="true"
+               encoding="UTF-8">
+            <classpath>
+                <pathelement path="${build.dir}"/>
+            </classpath>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+
     <target name="jar" depends="compile" description="create a Jar file for the application">
         <jar destfile="${dist.dir}/tm.jar">
-            <fileset dir="${build.dir}" includes="**/*.class" excludes="tm/tests/**"/>
+            <fileset dir="${build.dir}" includes="**/*.class"/>
             <fileset dir="${src.dir}">
                 <include name="**/*.gif"/>
                 <include name="**/*.png"/>
@@ -71,10 +89,11 @@
         </java>
     </target>
 
-    <target name="test" depends="compile" description="run regression tests">
+    <target name="test" depends="compile-tests" description="run regression tests">
         <java classname="tm.tests.RegressionTests" fork="true" failonerror="true">
             <classpath>
                 <pathelement path="${build.dir}"/>
+                <pathelement path="${test.build.dir}"/>
             </classpath>
         </java>
     </target>
